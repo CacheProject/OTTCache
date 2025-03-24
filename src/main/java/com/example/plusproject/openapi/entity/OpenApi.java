@@ -1,7 +1,5 @@
 package com.example.plusproject.openapi.entity;
 
-import com.example.plusproject.common.BusinessStatus;
-import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,16 +19,18 @@ public class OpenApi {
     private String domainName;                    // 도메인명
     private String phoneNumber;                   // 전화번호
     private String operatorEmail;                 // 운영자이메일
+    private String companyAddress;                // 회사 주소
     private int overallEvaluation;                // 전체평가
-    private BusinessStatus businessStatus;        // 영업형태
+    private String businessStatus;                // 영업형태
 
-    public OpenApi(String companyName, String storeName, String domainName, String phoneNumber, String operatorEmail, int overallEvaluation, String businessStatus) {
+    public OpenApi(String companyName, String storeName, String domainName, String phoneNumber, String operatorEmail, String companyAddress, int overallEvaluation, String businessStatus) {
         this.companyName = companyName;
         this.storeName = storeName;
         this.domainName = domainName;
         this.phoneNumber = phoneNumber;
         this.operatorEmail = operatorEmail;
+        this.companyAddress = companyAddress;
         this.overallEvaluation = overallEvaluation;
-        this.businessStatus = BusinessStatus.fromString(businessStatus);
+        this.businessStatus = businessStatus;
     }
 }

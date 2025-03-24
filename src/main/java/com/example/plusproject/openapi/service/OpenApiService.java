@@ -69,10 +69,11 @@ public class OpenApiService {
                 String domainName = node.path("DOMAIN_NAME").asText();
                 String phoneNumber = node.path("TEL").asText();
                 String operatorEmail = node.path("EMAIL").asText();
-                int overallEvaluation = node.path("OVERALL_EVALUATION").asInt();
-                String businessStatus = node.path("BUSINESS_STATUS").asText();
+                String companyAddress = node.path("COM_ADDR").asText();
+                int overallEvaluation = node.path("TOT_RATINGPOINT").asInt();
+                String businessStatus = node.path("STAT_NM").asText();
 
-                OpenApi openApi = new OpenApi(companyName, storeName, domainName, phoneNumber, operatorEmail, overallEvaluation, businessStatus);
+                OpenApi openApi = new OpenApi(companyName, storeName, domainName, phoneNumber, operatorEmail, companyAddress, overallEvaluation, businessStatus);
                 batchList.add(openApi);
             }
 
