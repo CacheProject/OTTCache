@@ -6,6 +6,8 @@ import com.example.plusproject.collection.fetchstatus.repository.CsvDataFetchSta
 import com.example.plusproject.collection.repository.CsvDataRepository;
 import com.example.plusproject.common.util.CsvReaderUtil;
 import com.example.plusproject.common.util.DataConsistencyUtil;
+import com.example.plusproject.exception.DataIntegrityException;
+import com.example.plusproject.response.MessageResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +32,7 @@ public class CsvService {
     private EntityManager entityManager;
 
     @Transactional
-    public void readCsvAndSaveToDatabaseInBatch() {
+    public String readCsvAndSaveToDatabaseInBatch() {
         List<CsvData> batchList = new ArrayList<>();
         int batchSize = 100;
         int maxLimit = 10_000;
@@ -49,7 +51,8 @@ public class CsvService {
             if (batchList.size() >= batchSize) {
                 batchInsert(batchList);
 
-                if (dataConsistencyUtil.checkCsvDataConsistency(batchList)) { // ✅ 정합성 체크 추가
+                // 정합성 체크
+                if (dataConsistencyUtil.checkCsvDataConsistency(batchList)) {
                     totalSaved += batchList.size();
                     batchList.clear();
 
@@ -62,15 +65,17 @@ public class CsvService {
                         break;
                     }
                 } else {
-                    System.out.println("⚠ 데이터 정합성 체크 실패! 배치 삽입 중단");
-                    break;
+                    throw new DataIntegrityException("데이터 정합성 체크 실패! 배치 삽입 중단");
                 }
             }
         }
 
+        // 남은 배치 데이터 삽입
         if (!batchList.isEmpty()) {
             batchInsert(batchList);
         }
+
+        return totalSaved + "개의 CSV 데이터가 성공적으로 삽입되었습니다.";
     }
 
     @Transactional
