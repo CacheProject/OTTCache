@@ -28,7 +28,23 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, e.getStatus());
     }
 
-    // 기타 예외 처리 (예: NullPointerException, IllegalArgumentException 등)
+    // NullPointerException 처리
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ErrorResponse> handleNullPointerException(NullPointerException e) {
+        log.error("NullPointerException : {}", e.getMessage(), e);
+        ErrorResponse errorResponse = ErrorResponse.of("NULL_POINTER_EXCEPTION", "필수 값이 누락되었습니다.", 400);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    // IllegalArgumentException 처리
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
+        log.error("IllegalArgumentException : {}", e.getMessage(), e);
+        ErrorResponse errorResponse = ErrorResponse.of("ILLEGAL_ARGUMENT", "잘못된 인자가 전달되었습니다.", 400);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    // 기타 예외 처리
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error("Exception : {}", e.getMessage(), e);
