@@ -14,17 +14,12 @@ public class CollectionController {
     private final OpenApiService openApiService;
     private final CsvService csvService;
 
-    // csv 파일을 1개 행씩 읽어서 db에 차례대로 insert
-    @GetMapping("/collection")
-    public String fetchCsvAndSaveToDatabase() {
-        return csvService.readCsvAndSaveToDatabaseOneByOne();
+    // csv 파일을 100개 행씩 읽어서 db에 차례대로 insert
+    @GetMapping("/collection-batch")
+    public ResponseEntity<String> fetchCsvAndSaveInBatch() {
+        csvService.readCsvAndSaveToDatabaseInBatch();
+        return ResponseEntity.ok("CSV 데이터 배치 삽입 완료!");
     }
-
-//    // csv 파일을 100개 행씩 읽어서 db에 차례대로 insert
-//    @GetMapping("/collection-batch")
-//    public String fetchCsvAndSaveInBatch() {
-//        return csvService.readCsvAndSaveToDatabaseInBatch();
-//    }
 
     // OpenAPI를 통해 데이터를 100개씩 db에 차례대로 insert
     @GetMapping("/collection-openapi")
