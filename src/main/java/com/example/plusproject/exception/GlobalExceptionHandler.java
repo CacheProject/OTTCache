@@ -28,14 +28,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, e.getStatus());
     }
 
-    // 비즈니스 로직 오류 예외 처리
-    @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
-        log.error("BusinessException : {}", e.getMessage(), e);
-        ErrorResponse errorResponse = ErrorResponse.of("BUSINESS_ERROR", e.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
     // 기타 예외 처리 (예: NullPointerException, IllegalArgumentException 등)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
