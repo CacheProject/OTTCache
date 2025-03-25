@@ -12,8 +12,7 @@ public enum ErrorCode {
     FORBIDDEN(HttpStatus.FORBIDDEN,"FORBIDDEN","권한이 없습니다"),
     OPEN_API_FETCH_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "OPEN_API_FETCH_FAILED", "OpenAPI 데이터를 가져오는 데 실패했습니다."),
     CSV_FETCH_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "CSV_FETCH_FAILED", "CSV 데이터를 처리하는 데 실패했습니다."),
-    DATA_INCONSISTENCY(HttpStatus.INTERNAL_SERVER_ERROR, "DATA_INCONSISTENCY", "데이터 정합성 오류입니다."),
-    BUSINESS_ERROR(HttpStatus.BAD_REQUEST, "BUSINESS_ERROR", "비즈니스 로직 오류입니다.");
+    DATA_INCONSISTENCY(HttpStatus.INTERNAL_SERVER_ERROR, "DATA_INCONSISTENCY", "데이터 정합성 오류입니다.");
 
     private final HttpStatus status;
     private final String code;
