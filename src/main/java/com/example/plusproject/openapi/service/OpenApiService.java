@@ -1,5 +1,6 @@
 package com.example.plusproject.openapi.service;
 
+import com.example.plusproject.common.util.DataConsistencyUtil;
 import com.example.plusproject.openapi.entity.OpenApi;
 import com.example.plusproject.openapi.fetchstatus.entity.OpenApiFetchStatus;
 import com.example.plusproject.openapi.fetchstatus.repository.OpenApiFetchStatusRepository;
@@ -30,7 +31,9 @@ public class OpenApiService {
     private final XmlMapper xmlMapper;
     private final OpenApiRepository openApiRepository;
     private final OpenApiFetchStatusRepository openApiFetchStatusRepository;
+    private final DataConsistencyUtil dataConsistencyUtil;
     private final String openApiUrl;
+
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -38,11 +41,13 @@ public class OpenApiService {
     public OpenApiService(RestTemplate restTemplate, XmlMapper xmlMapper,
                           OpenApiRepository openApiRepository,
                           OpenApiFetchStatusRepository openApiFetchStatusRepository,
+                          DataConsistencyUtil dataConsistencyUtil,
                           @Value("${openapi.url}") String openApiUrl) {
         this.restTemplate = restTemplate;
         this.xmlMapper = xmlMapper;
         this.openApiRepository = openApiRepository;
         this.openApiFetchStatusRepository = openApiFetchStatusRepository;
+        this.dataConsistencyUtil = dataConsistencyUtil;
         this.openApiUrl = openApiUrl;
     }
 
@@ -99,16 +104,16 @@ public class OpenApiService {
 
                 totalInserted += batchList.size(); // 삽입된 데이터 수 증가
 
+                // 데이터 정합성 체크
+                boolean isConsistent = dataConsistencyUtil.checkOpenApiDataConsistency(batchList);  // 정합성 체크
+                if (!isConsistent) {
+                    throw new RuntimeException("데이터 정합성 체크 실패! 저장된 데이터와 불러온 데이터가 일치하지 않습니다.");
+                }
+
                 // 마지막으로 삽입된 행을 추적하여 상태 업데이트
                 OpenApiFetchStatus newFetchStatus = new OpenApiFetchStatus();
                 newFetchStatus.setLastFetchedRow(endRow);
                 openApiFetchStatusRepository.save(newFetchStatus);
-
-                // 데이터 정합성 체크
-                boolean isConsistent = checkDataConsistency(batchList);
-                if (!isConsistent) {
-                    throw new RuntimeException("데이터 정합성 체크 실패! 저장된 데이터와 불러온 데이터가 일치하지 않습니다.");
-                }
 
                 // 10000개 삽입 후 종료
                 if (totalInserted >= BATCH_SIZE) {
@@ -140,28 +145,4 @@ public class OpenApiService {
         entityManager.flush();
         entityManager.clear();
     }
-
-    // batch 단위로 정합성 체크
-    private boolean checkDataConsistency(List<OpenApi> batchList) {
-        if (batchList.isEmpty()) {
-            return true;
-        }
-
-        Random random = new Random();
-        int sampleSize = Math.min(5, batchList.size()); // 최대 5개 랜덤 샘플링
-
-        for (int i = 0; i < sampleSize; i++) {
-            OpenApi randomSample = batchList.get(random.nextInt(batchList.size()));
-
-            Optional<OpenApi> dbRecord = openApiRepository.findById(randomSample.getId());
-            if (dbRecord.isEmpty() || !dbRecord.get().equals(randomSample)) {
-                log.error("정합성 체크 실패: {}", randomSample);
-                return false;
-            }
-        }
-
-        log.info("정합성 체크 성공: 샘플 {}개 데이터가 정상적으로 저장됨", sampleSize);
-        return true;
-    }
 }
-
