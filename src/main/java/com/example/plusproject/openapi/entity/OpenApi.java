@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -17,7 +19,7 @@ public class OpenApi {
     private String companyName;                   // 상호명
     private String storeName;                     // 쇼핑몰명
 
-    @Column(length = 512)
+    @Column(length = 1024)
     private String domainName;                    // 도메인명
 
     private String phoneNumber;                   // 전화번호
@@ -35,5 +37,40 @@ public class OpenApi {
         this.companyAddress = companyAddress;
         this.overallEvaluation = overallEvaluation;
         this.businessStatus = businessStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "OpenApi{" +
+                "id=" + id +
+                ", company='" + companyName + '\'' +
+                ", shopName='" + storeName + '\'' +
+                ", domainName='" + domainName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", operatorEmail='" + operatorEmail + '\'' +
+                ", companyAddress='" + companyAddress + '\'' +
+                ", overallEvaluation=" + overallEvaluation +
+                ", status='" + businessStatus + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OpenApi openApi = (OpenApi) o;
+        return overallEvaluation == openApi.overallEvaluation &&
+                Objects.equals(companyName, openApi.companyName) &&
+                Objects.equals(storeName, openApi.storeName) &&
+                Objects.equals(domainName, openApi.domainName) &&
+                Objects.equals(phoneNumber, openApi.phoneNumber) &&
+                Objects.equals(operatorEmail, openApi.operatorEmail) &&
+                Objects.equals(companyAddress, openApi.companyAddress) &&
+                Objects.equals(businessStatus, openApi.businessStatus);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(companyName, storeName, domainName, phoneNumber, operatorEmail, companyAddress, overallEvaluation, businessStatus);
     }
 }
