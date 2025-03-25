@@ -34,16 +34,6 @@ public class DataConsistencyUtil {
             // 데이터베이스에서 해당 ID의 CsvData 객체를 가져와 비교
             Optional<CsvData> dbRecord = csvDataRepository.findById(randomSample.getId());
 
-            // DB 값 출력 (디버깅 용)
-            if (dbRecord.isPresent()) {
-                log.info("DB에서 조회한 CsvData: {}", dbRecord.get().toString());
-            } else {
-                log.warn("DB에서 해당 ID의 CsvData가 존재하지 않음: {}", randomSample.getId());
-            }
-
-            // CSV에서 뽑은 값 출력 (디버깅 용)
-            log.info("CSV에서 뽑은 CsvData: {}", randomSample.toString());
-
             // CSV와 DB 값 비교
             if (dbRecord.isEmpty() || !dbRecord.get().equals(randomSample)) {
                 log.error("정합성 체크 실패! CSV 데이터: {} DB 데이터: {}", randomSample.toString(), dbRecord.orElse(null));
