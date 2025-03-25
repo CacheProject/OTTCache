@@ -16,7 +16,10 @@ public class OpenApi {
 
     private String companyName;                   // 상호명
     private String storeName;                     // 쇼핑몰명
+
+    @Column(length = 512)
     private String domainName;                    // 도메인명
+
     private String phoneNumber;                   // 전화번호
     private String operatorEmail;                 // 운영자이메일
     private String companyAddress;                // 회사 주소
