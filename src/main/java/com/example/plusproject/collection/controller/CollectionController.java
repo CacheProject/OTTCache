@@ -17,8 +17,8 @@ public class CollectionController {
     // csv 파일을 100개 행씩 읽어서 db에 차례대로 insert
     @GetMapping("/collection-batch")
     public ResponseEntity<String> fetchCsvAndSaveInBatch() {
-        csvService.readCsvAndSaveToDatabaseInBatch();
-        return ResponseEntity.ok("CSV 데이터 배치 삽입 완료!");
+        String result = csvService.readCsvAndSaveToDatabaseInBatch();
+        return ResponseEntity.ok(result);
     }
 
     // OpenAPI를 통해 데이터를 100개씩 db에 차례대로 insert
