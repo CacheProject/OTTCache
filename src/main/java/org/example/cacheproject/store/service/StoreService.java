@@ -26,17 +26,13 @@ public class StoreService {
         List<Store> storeList = new ArrayList<>();
 
         // 전체평가 필터만 사용
-        if (score != null && status == null) {
+        if (score != null && (status == null || status.trim().isEmpty())) {
             storeList = storeRepository.findTop10ByTotal_evalutionOrderByMonitoring_dateDesc(score);
-        }
-
-        // 업소상태 필터만 사용
-        if (status != null && score == null) {
+        } // 업소상태 필터만 사용
+        else if (status != null && score == null) {
             storeList = storeRepository.findTop10ByOpen_statusOrderByMonitoring_dateDesc(status);
-        }
-
-        // 전체평가 필터와 업소상태 필터 둘다 사용
-        if (status != null && score != null) {
+        }  // 전체평가 필터와 업소상태 필터 둘다 사용
+        else {
             storeList = storeRepository.findTop10ByTotal_evalutionAndOpen_statusOrderByMonitoring_dateDesc(score, status);
         }
 
