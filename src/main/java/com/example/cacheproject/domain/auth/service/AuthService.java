@@ -5,7 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import com.example.cacheproject.config.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.cacheproject.domain.auth.dto.request.LoginRequestDto;
 import com.example.cacheproject.domain.auth.dto.response.LoginResponseDto;
 import com.example.cacheproject.domain.user.entity.User;

@@ -1,6 +1,6 @@
 package com.example.cacheproject.domain.auth.service;
 
-import com.example.cacheproject.config.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.cacheproject.domain.auth.dto.request.LoginRequestDto;
 import com.example.cacheproject.domain.auth.dto.response.LoginResponseDto;
 import com.example.cacheproject.domain.user.entity.User;
@@ -49,7 +49,7 @@ class AuthServiceTest {
     void 로그인_성공() {
         // Given
         LoginRequestDto loginDto = new LoginRequestDto("test@email.com", "password1234");
-        User user = new User("user", "test@email.com", "encodedPw", "USER");
+        User user = new User("user", "test@email.com", "encodedPassword", "USER");
 
         when(userRepository.findByEmail(loginDto.getEmail())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("password1234", "encodedPassword")).thenReturn(true);
