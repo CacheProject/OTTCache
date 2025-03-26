@@ -1,6 +1,6 @@
 package com.example.cacheproject.domain.user.dto.request;
 
-import com.example.cacheproject.domain.store.StoreRequestDto;
+import com.example.cacheproject.store.dto.request.StoreRequestDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

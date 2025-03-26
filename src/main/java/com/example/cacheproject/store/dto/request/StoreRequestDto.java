@@ -1,4 +1,4 @@
-package com.example.cacheproject.domain.store;
+package com.example.cacheproject.store.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 
 import java.util.List;
+import java.util.Optional;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
@@ -39,4 +40,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
             @Param("status") String status
     );
 
+    void deleteByUserId(Long userId);
+    Optional<Store> findByUserId(Long userId);
 }
