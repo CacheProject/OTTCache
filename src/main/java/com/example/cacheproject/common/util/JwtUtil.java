@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import com.example.cacheproject.domain.user.enums.UserRole;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,5 +66,9 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public String getTokenFromRequest(HttpServletRequest request) {
+        return request.getHeader("Authorization");
     }
 }
