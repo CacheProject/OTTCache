@@ -35,6 +35,4 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
             @Param("status") String status
     );
 
-
-
 }
