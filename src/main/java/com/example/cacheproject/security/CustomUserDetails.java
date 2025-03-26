@@ -10,10 +10,13 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Getter
-@AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private final User user;
+
+    public CustomUserDetails(User user) {
+        this.user = user;
+    }
 
     // Spring Security 필수 메서드 구현
     @Override
