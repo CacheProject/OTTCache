@@ -17,6 +17,7 @@ public class StoreController {
 
     private final StoreService storeService;
 
+    /* 전체평가 필터와 업소상태 필터(2개 필터 동시적용, 각각 1개씩 적용)를 적용 후 상위 10개만 조회(모니터링 날짜기준 내림차순 정렬)*/
     @GetMapping("/stores/top-ten")
     public ResponseEntity<List<StoreResponsDto>> getTopTenStores(
             @RequestParam(required = false) Integer score,
@@ -25,6 +26,7 @@ public class StoreController {
         return ResponseEntity.ok(storeService.findTopTenStores(score, status));
     }
 
+    /* 전체평가 필터와 업소상태 필터(2개 필터 동시적용) - 페이징 조회 */
     @GetMapping("/stores/paging")
     public ResponseEntity<Page<StoreResponsDto>> getStores(
             @RequestParam(defaultValue = "1") int page,

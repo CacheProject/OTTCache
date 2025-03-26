@@ -20,6 +20,7 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
 
+    /* 전체평가 필터와 업소상태 필터(2개 필터 동시적용, 각각 1개씩 적용)를 적용 후 상위 10개만 조회(모니터링 날짜기준 내림차순 정렬)*/
     @Transactional(readOnly = true)
     public List<StoreResponsDto> findTopTenStores(Integer score, String status) {
 
@@ -52,6 +53,7 @@ public class StoreService {
         return dtoList;
     }
 
+    /* 전체평가 필터와 업소상태 필터(2개 필터 동시적용) - 페이징 조회 */
     @Transactional(readOnly = true)
     public Page<StoreResponsDto> findAllStores(int page, int size, Integer score, String status) {
         int adjustPage = (page > 0) ? page - 1 : 0;
