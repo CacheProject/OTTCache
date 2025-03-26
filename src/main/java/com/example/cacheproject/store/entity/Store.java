@@ -1,5 +1,6 @@
 package com.example.cacheproject.store.entity;
 
+import com.example.cacheproject.store.dto.request.StoreRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,4 +30,13 @@ public class Store {
     private String total_evalution;
 
     private String monitoring_date;
+
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    public Store(StoreRequestDto dto, Long userId) {
+        this.store_name = dto.getStoreName();
+        this.email = dto.getEmail();
+        this.userId = userId;
+    }
 }

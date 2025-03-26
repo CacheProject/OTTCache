@@ -1,7 +1,7 @@
 package com.example.cacheproject.domain.user.service;
 
+import com.example.cacheproject.store.repository.StoreRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.example.cacheproject.domain.store.StoreRepository;
 import com.example.cacheproject.domain.user.dto.request.UserSignupRequestDto;
 import com.example.cacheproject.domain.user.dto.response.UserSignupResponseDto;
 import com.example.cacheproject.domain.user.entity.User;

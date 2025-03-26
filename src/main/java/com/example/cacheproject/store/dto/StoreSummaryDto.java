@@ -1,8 +1,7 @@
-package com.example.cacheproject.domain.store;
+package com.example.cacheproject.store.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor

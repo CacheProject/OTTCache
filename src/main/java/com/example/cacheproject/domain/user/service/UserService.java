@@ -1,10 +1,9 @@
 package com.example.cacheproject.domain.user.service;
 
-import com.example.cacheproject.domain.store.Store;
-import com.example.cacheproject.domain.store.StoreRepository;
 import com.example.cacheproject.exception.BadRequestException;
 import com.example.cacheproject.exception.NotFoundException;
 import com.example.cacheproject.exception.UnauthorizedException;
+import com.example.cacheproject.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.cacheproject.domain.user.dto.request.UserSignupRequestDto;
@@ -12,6 +11,7 @@ import com.example.cacheproject.domain.user.dto.response.UserListResponseDto;
 import com.example.cacheproject.domain.user.dto.response.UserProfileResponseDto;
 import com.example.cacheproject.domain.user.dto.response.UserSignupResponseDto;
 import com.example.cacheproject.domain.user.entity.User;
+import com.example.cacheproject.store.entity.Store;
 import com.example.cacheproject.domain.user.repository.UserRepository;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class UserService {
             if (request.getStore() == null) {
                 throw new BadRequestException("가게 정보가 필요합니다.");
             }
-            Store store = new Store(request.getStore(), user);
+            Store store = new Store(request.getStore(), user.getId());
             storeRepository.save(store);
             storeId = store.getId();
         }
