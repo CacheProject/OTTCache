@@ -9,6 +9,9 @@ import lombok.Getter;
 public class UserSignupRequestDto {
 
     @NotBlank
+    private String email;
+
+    @NotBlank
     private String username;
 
     @NotBlank

@@ -10,7 +10,6 @@ import org.example.cacheproject.domain.user.dto.response.UserListResponseDto;
 import org.example.cacheproject.domain.user.dto.response.UserProfileResponseDto;
 import org.example.cacheproject.domain.user.dto.response.UserSignupResponseDto;
 import org.example.cacheproject.domain.user.entity.User;
-import org.example.cacheproject.domain.user.enums.UserRole;
 import org.example.cacheproject.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,16 +31,15 @@ public class UserService {
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
-        User user = new User(request.getUsername(), encodedPassword, request.getRole());
+        User user = new User(request.getEmail(), request.getUsername(), encodedPassword, request.getRole());
         userRepository.save(user);
 
         Long storeId = null;
 
-        if (user.getUserRole() == UserRole.ADMIN) {
+        if (user.getUserRole().canHaveStore()) {
             if (request.getStore() == null) {
-                throw new BadRequestException("관리자는 store 정보를 포함해야 합니다.");
+                throw new BadRequestException("가게 정보가 필요합니다.");
             }
-
             Store store = new Store(request.getStore(), user);
             storeRepository.save(store);
             storeId = store.getId();

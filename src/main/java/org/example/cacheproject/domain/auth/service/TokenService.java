@@ -20,7 +20,7 @@ public class TokenService {
     private final JwtUtil jwtUtil;
 
     public String createAccessToken(User user) {
-        return jwtUtil.createAccessToken(user.getId(), user.getPassword(), user.getUserRole());
+        return jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getUserRole());
     }
 
     public String createRefreshToken(User user) {

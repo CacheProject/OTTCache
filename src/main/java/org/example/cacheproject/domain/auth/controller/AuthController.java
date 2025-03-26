@@ -35,6 +35,6 @@ public class AuthController {
     @GetMapping("/refresh")
     public ResponseEntity<ApiResponse<LoginResponseDto>> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         LoginResponseDto responseDto = authService.refreshToken(request, response);
-        return ResponseEntity.ok(ApiResponse.of("토근 재발급 성공", responseDto));
+        return ResponseEntity.ok(ApiResponse.of("토큰 재발급 성공", responseDto));
     }
 }

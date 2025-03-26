@@ -51,7 +51,7 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.of("유저 정보 수정 완료", new UserUpdateResponseDto(updatedUsername)));
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse<Void>> deleteUser(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid UserDeleteRequestDto request) {
         User user = userDetails.getUser();
         userService.deleteUser(user, request.getPassword());
