@@ -14,11 +14,19 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String mutaul;
+
     private String store_name;
 
-    private String total_evalution;
+    private String domain_name;
+
+    private String email;
+
+    private String store_status;
 
     private String open_status;
+
+    private String total_evalution;
 
     private String monitoring_date;
 }
