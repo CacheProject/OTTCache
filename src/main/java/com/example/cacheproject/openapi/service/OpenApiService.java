@@ -1,5 +1,6 @@
 package com.example.cacheproject.openapi.service;
 
+import com.example.cacheproject.common.util.BatchInsertUtil;
 import com.example.cacheproject.common.util.DataConsistencyUtil;
 import com.example.cacheproject.exception.BadRequestException;
 import com.example.cacheproject.exception.DataIntegrityException;
@@ -24,7 +25,7 @@ import java.util.List;
 @Service
 public class OpenApiService {
 
-    private static final int BATCH_SIZE = 10_000; // 한 번에 가져올 데이터 개수
+    private static final int MAX_LIMIT = 10_000; // 한 번 API 호출에 최대 삽입 가능한 데이터 개수
     private static final int MAX_REQUEST_SIZE = 1000; // OpenAPI에서 한 번에 요청할 수 있는 최대 데이터 건수
     private final RestTemplate restTemplate;
     private final XmlMapper xmlMapper;
@@ -61,7 +62,7 @@ public class OpenApiService {
             endRow = startRow + MAX_REQUEST_SIZE - 1;
         }
 
-        while (totalInserted < BATCH_SIZE) {
+        while (totalInserted < MAX_LIMIT) {
             String apiUrlWithParams = openApiUrl + "/" + startRow + "/" + endRow;
             ResponseEntity<String> response = restTemplate.getForEntity(apiUrlWithParams, String.class);
             String responseBody = response.getBody();
@@ -111,7 +112,7 @@ public class OpenApiService {
             newFetchStatus.setLastFetchedRow(endRow);
             openApiFetchStatusRepository.save(newFetchStatus);
 
-            if (totalInserted >= BATCH_SIZE) {
+            if (totalInserted >= MAX_LIMIT) {
                 break;
             }
 
@@ -126,17 +127,6 @@ public class OpenApiService {
     // OpenAPI 데이터를 100개 단위로 db에 insert하는 메서드
     @Transactional
     public void batchInsert(List<OpenApi> batchList) {
-        int batchSize = 100; // 100개 단위로 처리
-        for (int i = 0; i < batchList.size(); i++) {
-            entityManager.persist(batchList.get(i));
-
-            // 배치 사이즈마다 flush 및 clear 실행하여 성능 최적화
-            if (i > 0 && i % batchSize == 0) {
-                entityManager.flush();
-                entityManager.clear();
-            }
-        }
-        entityManager.flush();
-        entityManager.clear();
+        BatchInsertUtil.batchInsert(entityManager, batchList);
     }
 }

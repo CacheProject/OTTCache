@@ -3,6 +3,7 @@ package com.example.cacheproject.collection.service;
 import com.example.cacheproject.collection.entity.CsvData;
 import com.example.cacheproject.collection.fetchstatus.entity.CsvDataFetchStatus;
 import com.example.cacheproject.collection.fetchstatus.repository.CsvDataFetchStatusRepository;
+import com.example.cacheproject.common.util.BatchInsertUtil;
 import com.example.cacheproject.common.util.CsvReaderUtil;
 import com.example.cacheproject.common.util.DataConsistencyUtil;
 import com.example.cacheproject.exception.DataIntegrityException;
@@ -20,7 +21,7 @@ import java.util.List;
 public class CsvService {
 
     @Value("${file.path}")
-    private String filePath;
+    private String filePath; // CSV 파일 경로를 설정값에서 가져옴
 
     private final CsvReaderUtil csvReaderUtil;
     private final DataConsistencyUtil dataConsistencyUtil;
@@ -29,11 +30,12 @@ public class CsvService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    // CSV 데이터를 읽고 db에 insert
     @Transactional
     public String readCsvAndSaveToDatabaseInBatch() {
         List<CsvData> batchList = new ArrayList<>();
-        int batchSize = 100;
-        int maxLimit = 10_000;
+        int batchSize = 100; // 배치 크기 설정
+        int maxLimit = 10_000; // 한 번 API 호출에 최대 삽입 가능한 데이터 개수
         int totalSaved = 0;
 
         // 마지막으로 삽입된 행을 가져오기
@@ -54,7 +56,7 @@ public class CsvService {
                     totalSaved += batchList.size();
                     batchList.clear();
 
-                    // 마지막으로 처리된 행 번호 업데이트
+                    // 마지막으로 처리된 행 번호 저장 및 업데이트
                     CsvDataFetchStatus newFetchStatus = new CsvDataFetchStatus();
                     newFetchStatus.setLastFetchedRow(startRow + batchList.size() - 1);
                     csvDataFetchStatusRepository.save(newFetchStatus);
@@ -68,7 +70,7 @@ public class CsvService {
             }
         }
 
-        // 남은 배치 데이터 삽입
+        // 남은 배치 단위 데이터 삽입
         if (!batchList.isEmpty()) {
             batchInsert(batchList);
         }
@@ -76,14 +78,9 @@ public class CsvService {
         return totalSaved + "개의 CSV 데이터가 성공적으로 삽입되었습니다.";
     }
 
+    // CSV 데이터를 100개 단위로 db에 insert하는 메서드
     @Transactional
     public void batchInsert(List<CsvData> entities) {
-        for (int i = 0; i < entities.size(); i++) {
-            entityManager.persist(entities.get(i));
-            if (i % 100 == 0) {
-                entityManager.flush();
-                entityManager.clear();
-            }
-        }
+        BatchInsertUtil.batchInsert(entityManager, entities);
     }
 }
