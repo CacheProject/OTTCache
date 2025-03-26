@@ -1,4 +1,4 @@
-package org.example.cacheproject.store.entity;
+package com.example.cacheproject.store.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

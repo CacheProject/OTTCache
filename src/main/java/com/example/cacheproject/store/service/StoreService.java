@@ -1,9 +1,9 @@
-package org.example.cacheproject.store.service;
+package com.example.cacheproject.store.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.cacheproject.store.dto.response.StoreResponsDto;
-import org.example.cacheproject.store.entity.Store;
-import org.example.cacheproject.store.repository.StoreRepository;
+import com.example.cacheproject.store.dto.response.StoreResponsDto;
+import com.example.cacheproject.store.entity.Store;
+import com.example.cacheproject.store.repository.StoreRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;

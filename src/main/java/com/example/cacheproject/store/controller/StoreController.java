@@ -1,8 +1,8 @@
-package org.example.cacheproject.store.controller;
+package com.example.cacheproject.store.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.cacheproject.store.dto.response.StoreResponsDto;
-import org.example.cacheproject.store.service.StoreService;
+import com.example.cacheproject.store.dto.response.StoreResponsDto;
+import com.example.cacheproject.store.service.StoreService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

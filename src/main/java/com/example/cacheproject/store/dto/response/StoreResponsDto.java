@@ -1,7 +1,7 @@
-package org.example.cacheproject.store.dto.response;
+package com.example.cacheproject.store.dto.response;
 
 import lombok.Getter;
-import org.example.cacheproject.store.entity.Store;
+import com.example.cacheproject.store.entity.Store;
 
 @Getter
 public class StoreResponsDto {
