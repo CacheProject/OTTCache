@@ -6,7 +6,7 @@ import com.example.cacheproject.exception.BadRequestException;
 import com.example.cacheproject.exception.NotFoundException;
 import com.example.cacheproject.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
-import com.example.cacheproject.config.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.cacheproject.domain.user.dto.request.UserSignupRequestDto;
 import com.example.cacheproject.domain.user.dto.response.UserListResponseDto;
 import com.example.cacheproject.domain.user.dto.response.UserProfileResponseDto;
