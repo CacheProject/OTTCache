@@ -1,9 +1,9 @@
 package org.example.cacheproject.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.cacheproject.common.exception.BadRequestException;
-import org.example.cacheproject.common.exception.NotFoundException;
-import org.example.cacheproject.common.exception.UnauthorizedException;
+import com.example.plusproject.exception.BadRequestException;
+import com.example.plusproject.exception.UnauthorizedException;
+import com.example.plusproject.exception.NotFoundException;
 import org.example.cacheproject.config.PasswordEncoder;
 import org.example.cacheproject.domain.user.dto.request.UserSignupRequestDto;
 import org.example.cacheproject.domain.user.dto.response.UserListResponseDto;

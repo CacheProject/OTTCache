@@ -9,7 +9,7 @@ import org.example.cacheproject.domain.auth.dto.request.LoginRequestDto;
 import org.example.cacheproject.domain.auth.dto.response.LoginResponseDto;
 import org.example.cacheproject.domain.user.entity.User;
 import org.example.cacheproject.domain.user.repository.UserRepository;
-import org.example.cacheproject.common.exception.UnauthorizedException;
+import com.example.plusproject.exception.UnauthorizedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

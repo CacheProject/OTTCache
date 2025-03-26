@@ -1,8 +1,8 @@
 package org.example.cacheproject.domain.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.cacheproject.common.exception.NotFoundException;
-import org.example.cacheproject.common.exception.UnauthorizedException;
+import com.example.plusproject.exception.UnauthorizedException;
+import com.example.plusproject.exception.NotFoundException;
 import org.example.cacheproject.domain.auth.entity.RefreshToken;
 import org.example.cacheproject.domain.auth.enums.TokenStatus;
 import org.example.cacheproject.domain.auth.repository.RefreshTokenRepository;
