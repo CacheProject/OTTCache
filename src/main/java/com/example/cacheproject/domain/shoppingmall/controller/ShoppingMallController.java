@@ -33,7 +33,7 @@ public class ShoppingMallController {
     }
 
     // v1 API: 인기 검색어 조회 API (DB 조회)
-    @GetMapping("/popular")
+    @GetMapping("/api/v1/popular")
     public ResponseEntity<List<String>> getPopularKeywords() {
         List<String> popularKeywords = shoppingMallService.getPopularKeywords();
         return ResponseEntity.ok(popularKeywords);
