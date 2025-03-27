@@ -26,15 +26,22 @@ public class RefreshToken {
     @Enumerated(STRING)
     private TokenStatus tokenStatus = TokenStatus.VALID;
 
-    public RefreshToken(Long userId) {
-        this.userId = userId;
-        this.token = UUID.randomUUID().toString();
-        this.tokenStatus = TokenStatus.VALID;
+    @Version
+    private Long version;
+
+    public static RefreshToken create() {
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.token = UUID.randomUUID().toString();
+        refreshToken.tokenStatus = TokenStatus.VALID;
+        return refreshToken;
     }
 
     public void updateTokenStatus(TokenStatus status) {
         this.tokenStatus = status;
     }
 
-
+    public void reIssue() {
+        this.token = UUID.randomUUID().toString();
+        this.tokenStatus = TokenStatus.VALID;
+    }
 }

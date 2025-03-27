@@ -2,15 +2,16 @@ package com.example.cacheproject.openapi.service;
 
 import com.example.cacheproject.common.util.BatchInsertUtil;
 import com.example.cacheproject.common.util.DataConsistencyUtil;
-import com.example.cacheproject.exception.BadRequestException;
 import com.example.cacheproject.exception.DataIntegrityException;
+import com.example.cacheproject.openapi.dto.OpenApiResponse;
 import com.example.cacheproject.openapi.entity.OpenApi;
 import com.example.cacheproject.openapi.fetchstatus.entity.OpenApiFetchStatus;
 import com.example.cacheproject.openapi.fetchstatus.repository.OpenApiFetchStatusRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,21 +30,18 @@ public class OpenApiService {
     private static final int MAX_LIMIT = 10_000; // 한 번 API 호출에 최대 삽입 가능한 데이터 개수
     private static final int MAX_REQUEST_SIZE = 1000; // OpenAPI에서 한 번에 요청할 수 있는 최대 데이터 건수
     private final RestTemplate restTemplate;
-    private final XmlMapper xmlMapper;
     private final OpenApiFetchStatusRepository openApiFetchStatusRepository;
     private final DataConsistencyUtil dataConsistencyUtil;
     private final String openApiUrl;
 
-
     @PersistenceContext
     private EntityManager entityManager;
 
-    public OpenApiService(RestTemplate restTemplate, XmlMapper xmlMapper,
+    public OpenApiService(RestTemplate restTemplate,
                           OpenApiFetchStatusRepository openApiFetchStatusRepository,
                           DataConsistencyUtil dataConsistencyUtil,
                           @Value("${openapi.url}") String openApiUrl) {
         this.restTemplate = restTemplate;
-        this.xmlMapper = xmlMapper;
         this.openApiFetchStatusRepository = openApiFetchStatusRepository;
         this.dataConsistencyUtil = dataConsistencyUtil;
         this.openApiUrl = openApiUrl;
@@ -67,34 +66,11 @@ public class OpenApiService {
             ResponseEntity<String> response = restTemplate.getForEntity(apiUrlWithParams, String.class);
             String responseBody = response.getBody();
 
-            JsonNode rootNode;
-            try {
-                rootNode = xmlMapper.readTree(responseBody); // XML 데이터를 JSON으로 변환
-            } catch (Exception e) {
-                throw new BadRequestException("XML 데이터를 파싱하는 중 오류 발생");
-            }
-
-            JsonNode dataList = rootNode.path("row");
+            List<OpenApi> batchList = parseXmlWithJAXB(responseBody);
 
             // 더 이상 불러올 데이터가 없으면 종료
-            if (dataList.isEmpty()) {
+            if (batchList.isEmpty()) {
                 return "더 이상 데이터가 없습니다.";
-            }
-
-            List<OpenApi> batchList = new ArrayList<>();
-            for (JsonNode node : dataList) {
-                // OpenApi 엔티티 객체 생성 후 리스트에 추가
-                OpenApi openApi = new OpenApi(
-                        node.path("COMPANY").asText(),
-                        node.path("SHOP_NAME").asText(),
-                        node.path("DOMAIN_NAME").asText(),
-                        node.path("TEL").asText(),
-                        node.path("EMAIL").asText(),
-                        node.path("COM_ADDR").asText(),
-                        node.path("TOT_RATINGPOINT").asInt(),
-                        node.path("STAT_NM").asText()
-                );
-                batchList.add(openApi);
             }
 
             // 데이터베이스에 배치 단위로 insert
@@ -128,5 +104,20 @@ public class OpenApiService {
     @Transactional
     public void batchInsert(List<OpenApi> batchList) {
         BatchInsertUtil.batchInsert(entityManager, batchList);
+    }
+
+    // JAXB를 사용하여 XML을 파싱하는 메서드
+    public List<OpenApi> parseXmlWithJAXB(String xmlResponse) {
+        try {
+            // JAXBContext를 사용하여 OpenApiResponse 클래스를 unmarshalling합니다.
+            JAXBContext context = JAXBContext.newInstance(OpenApiResponse.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            StringReader reader = new StringReader(xmlResponse);
+            OpenApiResponse response = (OpenApiResponse) unmarshaller.unmarshal(reader);
+            return response.getRows(); // OpenApiResponse에서 rows 리스트를 반환합니다.
+        } catch (JAXBException e) {
+            log.error("XML 파싱 중 오류 발생", e);
+            return new ArrayList<>();
+        }
     }
 }
