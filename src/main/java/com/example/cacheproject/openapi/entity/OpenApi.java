@@ -1,6 +1,10 @@
 package com.example.cacheproject.openapi.entity;
 
 import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,23 +14,38 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 @Table(name = "from_openapi")
+@XmlRootElement(name = "row")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OpenApi {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String companyName;                   // 상호명
-    private String storeName;                     // 쇼핑몰명
+    @XmlElement(name = "COMPANY")
+    private String companyName;
+
+    @XmlElement(name = "SHOP_NAME")
+    private String storeName;
 
     @Column(length = 1024)
-    private String domainName;                    // 도메인명
+    @XmlElement(name = "DOMAIN_NAME")
+    private String domainName;
 
-    private String phoneNumber;                   // 전화번호
-    private String operatorEmail;                 // 운영자이메일
-    private String companyAddress;                // 회사 주소
-    private int overallEvaluation;                // 전체평가
-    private String businessStatus;                // 영업형태
+    @XmlElement(name = "TEL")
+    private String phoneNumber;
+
+    @XmlElement(name = "EMAIL")
+    private String operatorEmail;
+
+    @XmlElement(name = "COM_ADDR")
+    private String companyAddress;
+
+    @XmlElement(name = "TOT_RATINGPOINT")
+    private int overallEvaluation;
+
+    @XmlElement(name = "STAT_NM")
+    private String businessStatus;
 
     public OpenApi(String companyName, String storeName, String domainName, String phoneNumber, String operatorEmail, String companyAddress, int overallEvaluation, String businessStatus) {
         this.companyName = companyName;

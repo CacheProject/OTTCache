@@ -22,7 +22,7 @@ public class ShoppingMall {
     @Column(name = "store_name")
     private String storeName; // 쇼핑몰명
 
-    @Column(name = "domain_name")
+    @Column(name = "domain_name", length = 1024)
     private String domainName; // 도메인명
 
     @Column(name = "phone_number")
