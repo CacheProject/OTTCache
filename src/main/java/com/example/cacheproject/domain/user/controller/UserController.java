@@ -38,11 +38,11 @@ public class UserController {
         return ResponseEntity.ok(Response.of(userService.getAllUsers()));
     }
 
-    @GetMapping("/profile")
-    public ResponseEntity<Response<UserProfileResponseDto>> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        User user = userDetails.getUser();
-        return ResponseEntity.ok(Response.of(userService.getMyProfile(user)));
-    }
+//    @GetMapping("/profile")
+//    public ResponseEntity<Response<UserProfileResponseDto>> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
+//        User user = userDetails.getUser();
+//        return ResponseEntity.ok(Response.of(userService.getMyProfile(user)));
+//    }
 
     @PatchMapping
     public ResponseEntity<Response<UserUpdateResponseDto>> updateUsername(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid UserUpdateRequestDto request) {

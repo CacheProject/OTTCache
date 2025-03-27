@@ -10,16 +10,16 @@ public class StoreResponsDto {
 
     private final String store_name;
 
-    private final String total_evalution;
+    private final String total_evaluation;
 
     private final String open_status;
 
     private final String monitoring_date;
 
-    public StoreResponsDto(Long id, String store_name, String total_evalution, String open_status, String monitoring_date) {
+    public StoreResponsDto(Long id, String store_name, String total_evaluation, String open_status, String monitoring_date) {
         this.id = id;
         this.store_name = store_name;
-        this.total_evalution = total_evalution;
+        this.total_evaluation = total_evaluation;
         this.open_status = open_status;
         this.monitoring_date = monitoring_date;
     }

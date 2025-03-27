@@ -63,11 +63,11 @@ public class UserService {
                 .toList();
     }
 
-    @Transactional(readOnly = true)
-    public UserProfileResponseDto getMyProfile(User user) {
-        Store store = storeRepository.findByUserId(user.getId()).orElse(null);
-        return UserProfileResponseDto.from(user, store);
-    }
+//    @Transactional(readOnly = true)
+//    public UserProfileResponseDto getMyProfile(User user) {
+//        Store store = storeRepository.findByUserId(user.getId()).orElse(null);
+//        return UserProfileResponseDto.from(user, store);
+//    }
 
     @Transactional
     public String updateUsername(User user, String newUsername) {
