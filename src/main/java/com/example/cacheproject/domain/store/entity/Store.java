@@ -27,7 +27,7 @@ public class Store {
 
     private String open_status;
 
-    private String total_evalution;
+    private String total_evaluation;
 
     private String monitoring_date;
 
