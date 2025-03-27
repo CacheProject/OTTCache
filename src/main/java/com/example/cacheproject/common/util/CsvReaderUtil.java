@@ -30,7 +30,17 @@ public class CsvReaderUtil {
                 csvData.setPhoneNumber(nextLine[3]);
                 csvData.setOperatorEmail(nextLine[4]);
                 csvData.setCompanyAddress(nextLine[8]);
-                csvData.setBusinessStatus(nextLine[9]);
+                csvData.setStoreStatus(nextLine[9]);
+                csvData.setMainProductCategory(nextLine[16]);
+                csvData.setMonitoringDate(nextLine[31]);
+                // totalEvaluation 값을 int로 변환하여 설정
+                try {
+                    int totalEvaluation = Integer.parseInt(nextLine[10]); // 해당 인덱스를 확인
+                    csvData.setTotalEvaluation(totalEvaluation);
+                } catch (NumberFormatException e) {
+                    // 변환이 실패하면 기본값 설정 (예: 0)
+                    csvData.setTotalEvaluation(0);
+                }
 
                 csvDataList.add(csvData);
             }
