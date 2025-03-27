@@ -7,6 +7,7 @@ import com.example.cacheproject.domain.shoppingmall.entity.ShoppingMall;
 import com.example.cacheproject.domain.shoppingmall.repository.ShoppingMallRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,12 @@ public class ShoppingMallService {
 
     private final ShoppingMallRepository shoppingMallRepository;
     private final PopularKeywordRepository popularKeywordRepository;
+
+    // 캐시 무효화 메서드 추가
+    @CacheEvict(value = "popularKeywords", key = "'top10'")
+    public void refreshPopularKeywordsCache() {
+        log.info("Popular Keywords Cache Refreshed");
+    }
 
     // v1 API: 캐시 없음 + 인기 검색어 저장 (DB 활용)
     @Transactional
@@ -61,25 +68,7 @@ public class ShoppingMallService {
                 .collect(Collectors.toList());
     }
 
-    // v2 API: 캐시 적용 + 인기 검색어 저장
-    @Transactional
-    public PageResponse searchShoppingMallsByCategoryV2(String keyword, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page shoppingMallPage = shoppingMallRepository.findByMainProductCategoryContainingIgnoreCase(keyword, pageable);
-
-        // 인기 검색어 저장 로직 추가
-        savePopularKeyword(keyword);
-
-        return new PageResponse<>(
-                shoppingMallPage.getContent(),
-                shoppingMallPage.getNumber(),
-                shoppingMallPage.getSize(),
-                shoppingMallPage.getTotalPages(),
-                shoppingMallPage.getTotalElements()
-        );
-    }
-
-    // v2 API: 인기 검색어 캐시 적용
+    // v2: 인기 검색어 캐시 적용
     @Transactional(readOnly = true)
     @Cacheable(value = "popularKeywords", key = "'top10'")
     public List<String> getPopularKeywordsV2() {
@@ -88,5 +77,26 @@ public class ShoppingMallService {
                 .stream()
                 .map(PopularKeyword::getKeyword)
                 .collect(Collectors.toList());
+    }
+
+    // v2 API: 검색할 때마다 인기 검색어 저장 및 캐시 리프레시
+    @Transactional
+    public PageResponse searchShoppingMallsByCategoryV2(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page shoppingMallPage = shoppingMallRepository.findByMainProductCategoryContainingIgnoreCase(keyword, pageable);
+
+        // 인기 검색어 저장
+        savePopularKeyword(keyword);
+
+        // 캐시 리프레시
+        refreshPopularKeywordsCache();
+
+        return new PageResponse<>(
+                shoppingMallPage.getContent(),
+                shoppingMallPage.getNumber(),
+                shoppingMallPage.getSize(),
+                shoppingMallPage.getTotalPages(),
+                shoppingMallPage.getTotalElements()
+        );
     }
 }
