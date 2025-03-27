@@ -1,5 +1,6 @@
 package com.example.cacheproject.common.util;
 
+import com.example.cacheproject.domain.user.enums.UserRole;
 import com.example.cacheproject.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -8,7 +9,6 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import com.example.cacheproject.domain.user.enums.UserRole;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -31,8 +31,11 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
-        byte[] bytes = Base64.getDecoder().decode(secretKey);
-        key = Keys.hmacShaKeyFor(bytes);
+        try {
+            key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to initialize JWT key", e);
+        }
     }
 
     /* Access Token 생성 */
