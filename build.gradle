@@ -36,6 +36,11 @@ dependencies {
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
     implementation 'jakarta.activation:jakarta.activation-api:2.1.2'
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.3'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     compileOnly 'org.projectlombok:lombok'
