@@ -1,4 +1,4 @@
-package com.example.cacheproject.store;
+package com.example.cacheproject.domain.store;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

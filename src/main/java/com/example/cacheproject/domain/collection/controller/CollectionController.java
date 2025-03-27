@@ -27,4 +27,5 @@ public class CollectionController {
         String result = openApiService.fetchAndSaveOpenApiData();
         return ResponseEntity.ok(result);
     }
+
 }

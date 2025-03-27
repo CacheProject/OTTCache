@@ -1,4 +1,4 @@
-package com.example.cacheproject.security;
+package com.example.cacheproject.common.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,8 @@
 package com.example.cacheproject.domain.store.service;
 
-import com.example.cacheproject.store.ScrollPaginationCollection;
-import com.example.cacheproject.store.dto.response.GetStoreResponseDto;
+import com.example.cacheproject.domain.store.ScrollPaginationCollection;
+import com.example.cacheproject.domain.store.dto.response.GetStoreResponseDto;
+import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import com.example.cacheproject.domain.store.dto.response.StoreResponsDto;
 import com.example.cacheproject.domain.store.entity.Store;
@@ -70,14 +71,12 @@ public class StoreService {
         return new PageImpl<>(dtoList, pageable, storePage.getTotalElements());
     }
 
+    // 커서 기반 페이지네이션 (필터 개별 및 동시 가능)
     @Transactional(readOnly = true)
     public GetStoreResponseDto getStoresByCursor(Integer score, String status, Long lastPageId, int size) {
        List<Store> storeList = storeRepository.findAllStoresByCursorTotal_evaluationAndOpen_status(score,status,lastPageId,size);
-//        Page<Store> page = storeRepository.findAllStoresByCursorTotal_evalutionAndOpen_status(pageable,score,status,lastPageId);
-//        List<Store> storeList = page.getContent();
 
         ScrollPaginationCollection<Store> storeCursor = ScrollPaginationCollection.of(storeList, size);
-//        GetStoreResponseDto dto = GetStoreResponseDto.of(storeCursor, page.getTotalElements());
         return GetStoreResponseDto.of(storeCursor, storeList.size());
     }
 }
