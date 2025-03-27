@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @Slf4j(topic = "JwtUtil")
@@ -30,11 +31,8 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
-        try {
-            key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to initialize JWT key", e);
-        }
+        byte[] bytes = Base64.getDecoder().decode(secretKey);
+        key = Keys.hmacShaKeyFor(bytes);
     }
 
     /* Access Token 생성 */
