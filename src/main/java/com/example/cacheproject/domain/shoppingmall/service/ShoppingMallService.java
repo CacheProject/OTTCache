@@ -60,4 +60,33 @@ public class ShoppingMallService {
                 .map(PopularKeyword::getKeyword)
                 .collect(Collectors.toList());
     }
+
+    // v2 API: 캐시 적용 + 인기 검색어 저장
+    @Transactional
+    public PageResponse searchShoppingMallsByCategoryV2(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page shoppingMallPage = shoppingMallRepository.findByMainProductCategoryContainingIgnoreCase(keyword, pageable);
+
+        // 인기 검색어 저장 로직 추가
+        savePopularKeyword(keyword);
+
+        return new PageResponse<>(
+                shoppingMallPage.getContent(),
+                shoppingMallPage.getNumber(),
+                shoppingMallPage.getSize(),
+                shoppingMallPage.getTotalPages(),
+                shoppingMallPage.getTotalElements()
+        );
+    }
+
+    // v2 API: 인기 검색어 캐시 적용
+    @Transactional(readOnly = true)
+    @Cacheable(value = "popularKeywords", key = "'top10'")
+    public List<String> getPopularKeywordsV2() {
+        log.info(">>> DB에서 인기 검색어 실제 조회 <<< ");
+        return popularKeywordRepository.findTop10ByOrderBySearchCountDesc()
+                .stream()
+                .map(PopularKeyword::getKeyword)
+                .collect(Collectors.toList());
+    }
 }

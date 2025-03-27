@@ -38,4 +38,24 @@ public class ShoppingMallController {
         List<String> popularKeywords = shoppingMallService.getPopularKeywords();
         return ResponseEntity.ok(popularKeywords);
     }
+
+    // v2 API: 캐시 적용
+    @GetMapping("/api/v2/boards/search")
+    public ResponseEntity searchShoppingMallsV2(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        PageResponse result = shoppingMallService.searchShoppingMallsByCategoryV2(keyword, page, size);
+
+        return ResponseEntity.ok(result);
+    }
+
+    // v2 API: 캐시 적용된 인기 검색어 조회
+    @GetMapping("/api/v2/popular")
+    public ResponseEntity<List<String>> getPopularKeywordsV2() {
+        List<String> popularKeywords = shoppingMallService.getPopularKeywordsV2();
+        return ResponseEntity.ok(popularKeywords);
+    }
+
 }
