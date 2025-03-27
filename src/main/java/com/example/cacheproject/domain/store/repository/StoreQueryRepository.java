@@ -1,6 +1,6 @@
-package com.example.cacheproject.store.repository;
+package com.example.cacheproject.domain.store.repository;
 
-import com.example.cacheproject.store.entity.Store;
+import com.example.cacheproject.domain.store.entity.Store;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

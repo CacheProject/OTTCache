@@ -28,7 +28,7 @@ public class StoreResponsDto {
         return new StoreResponsDto(
                 store.getId(),
                 store.getStore_name(),
-                store.getTotal_evalution(),
+                store.getTotal_evaluation(),
                 store.getOpen_status(),
                 store.getMonitoring_date()
         );

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import com.example.cacheproject.domain.auth.dto.request.LoginRequestDto;
 import com.example.cacheproject.domain.auth.dto.response.LoginResponseDto;
 import com.example.cacheproject.domain.auth.service.AuthService;
-import com.example.cacheproject.security.CustomUserDetails;
+import com.example.cacheproject.common.security.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

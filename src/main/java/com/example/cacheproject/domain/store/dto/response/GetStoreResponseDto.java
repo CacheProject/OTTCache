@@ -1,7 +1,7 @@
-package com.example.cacheproject.store.dto.response;
+package com.example.cacheproject.domain.store.dto.response;
 
-import com.example.cacheproject.store.ScrollPaginationCollection;
-import com.example.cacheproject.store.entity.Store;
+import com.example.cacheproject.domain.store.ScrollPaginationCollection;
+import com.example.cacheproject.domain.store.entity.Store;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

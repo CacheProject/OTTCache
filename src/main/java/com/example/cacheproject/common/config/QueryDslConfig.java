@@ -1,4 +1,4 @@
-package com.example.cacheproject.config;
+package com.example.cacheproject.common.config;
 
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQueryFactory;

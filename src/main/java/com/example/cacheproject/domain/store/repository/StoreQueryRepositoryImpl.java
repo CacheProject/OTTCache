@@ -1,6 +1,7 @@
-package com.example.cacheproject.store.repository;
+package com.example.cacheproject.domain.store.repository;
 
-import com.example.cacheproject.store.entity.Store;
+import com.example.cacheproject.domain.store.entity.Store;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.cacheproject.store.entity.QStore.store;
+import static com.example.cacheproject.domain.store.entity.QStore.store;
 
 @Repository
 @RequiredArgsConstructor
@@ -76,11 +77,21 @@ public class StoreQueryRepositoryImpl implements StoreQueryRepository {
     // cursor 기반 페이지네이션
     @Override
     public List<Store> findAllStoresByCursorTotal_evaluationAndOpen_status (Integer score, String status, Long lastPageId, int size) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (score != null) {
+            builder.and(store.total_evaluation.eq(String.valueOf(score)));
+        }
+        if (status != null) {
+            builder.and(store.open_status.eq(status));
+        }
+        if (lastPageId != null) {
+            builder.and(store.id.lt(lastPageId));
+        }
+
         return queryFactory
                 .selectFrom(store)
-                .where(store.total_evaluation.eq(String.valueOf(score)),
-                                store.open_status.eq(status),
-                                lastPageId != null ? store.id.lt(lastPageId) : null)
+                .where(builder)
                 .orderBy(store.id.desc())
                 .limit(size)
                 .fetch();
