@@ -2,7 +2,9 @@ package com.example.cacheproject.openapi.service;
 
 import com.example.cacheproject.common.util.BatchInsertUtil;
 import com.example.cacheproject.common.util.DataConsistencyUtil;
+import com.example.cacheproject.exception.BadRequestException;
 import com.example.cacheproject.exception.DataIntegrityException;
+import com.example.cacheproject.exception.OpenApiException;
 import com.example.cacheproject.openapi.dto.OpenApiResponse;
 import com.example.cacheproject.openapi.entity.OpenApi;
 import com.example.cacheproject.openapi.fetchstatus.entity.OpenApiFetchStatus;
@@ -12,6 +14,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -25,70 +28,82 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class OpenApiService {
 
-    private static final int MAX_LIMIT = 10_000; // 한 번 API 호출에 최대 삽입 가능한 데이터 개수
+    private static final int MAX_TOTAL_LIMIT = 10_000; // 총 최대 삽입 데이터 개수
     private static final int MAX_REQUEST_SIZE = 1000; // OpenAPI에서 한 번에 요청할 수 있는 최대 데이터 건수
+    private static final int BATCH_INSERT_SIZE = 100; // DB에 한 번에 삽입할 데이터 개수
+
     private final RestTemplate restTemplate;
     private final OpenApiFetchStatusRepository openApiFetchStatusRepository;
     private final DataConsistencyUtil dataConsistencyUtil;
-    private final String openApiUrl;
+
+    @Value("${openapi.url}")
+    private String openApiUrl;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public OpenApiService(RestTemplate restTemplate,
-                          OpenApiFetchStatusRepository openApiFetchStatusRepository,
-                          DataConsistencyUtil dataConsistencyUtil,
-                          @Value("${openapi.url}") String openApiUrl) {
-        this.restTemplate = restTemplate;
-        this.openApiFetchStatusRepository = openApiFetchStatusRepository;
-        this.dataConsistencyUtil = dataConsistencyUtil;
-        this.openApiUrl = openApiUrl;
-    }
-
-    // OpenAPI 데이터를 가져와서 db에 저장하는 메서드
     @Transactional
     public String fetchAndSaveOpenApiData() {
         int startRow = 1;
-        int endRow = startRow + MAX_REQUEST_SIZE - 1;
+        int endRow = MAX_REQUEST_SIZE;
         int totalInserted = 0;
 
-        // 가장 최근 저장된 데이터의 마지막 row 번호를 가져와서 이어서 저장하도록 설정
-        OpenApiFetchStatus fetchStatus = openApiFetchStatusRepository.findTopByOrderByUpdatedAtDesc();
-        if (fetchStatus != null) {
-            startRow = fetchStatus.getLastFetchedRow() + 1;
+        OpenApiFetchStatus lastFetchStatus = openApiFetchStatusRepository.findTopByOrderByUpdatedAtDesc();
+        if (lastFetchStatus != null) {
+            startRow = lastFetchStatus.getLastFetchedRow() + 1;
             endRow = startRow + MAX_REQUEST_SIZE - 1;
         }
 
-        while (totalInserted < MAX_LIMIT) {
+        while (totalInserted < MAX_TOTAL_LIMIT) {
             String apiUrlWithParams = openApiUrl + "/" + startRow + "/" + endRow;
-            ResponseEntity<String> response = restTemplate.getForEntity(apiUrlWithParams, String.class);
-            String responseBody = response.getBody();
 
-            List<OpenApi> batchList = parseXmlWithJAXB(responseBody);
+            ResponseEntity<String> response;
+            try {
+                response = restTemplate.getForEntity(apiUrlWithParams, String.class);
+            } catch (Exception e) {
+                throw new OpenApiException("API 호출 중 오류 발생: " + e.getMessage());
+            }
+
+            // 요청 본문 null 체크
+            String responseBody = response.getBody();
+            if (responseBody == null) {
+                throw new BadRequestException("API 응답 본문이 비어있습니다.");
+            }
+
+            // XML 파싱
+            List<OpenApi> fetchedList = parseXmlResponse(responseBody);
 
             // 더 이상 불러올 데이터가 없으면 종료
-            if (batchList.isEmpty()) {
-                return "더 이상 데이터가 없습니다.";
+            if (fetchedList.isEmpty()) {
+                break;
             }
 
-            // 데이터베이스에 배치 단위로 insert
-            batchInsert(batchList);
-            totalInserted += batchList.size();
+            // 배치 인서트 로직
+            List<OpenApi> batchToInsert = new ArrayList<>();
+            for (OpenApi openApi : fetchedList) {
+                batchToInsert.add(openApi);
 
-            // 데이터 정합성 체크
-            boolean isConsistent = dataConsistencyUtil.checkOpenApiDataConsistency(batchList);
-            if (!isConsistent) {
-                throw new DataIntegrityException("데이터 정합성 체크 실패! 저장된 데이터와 불러온 데이터가 일치하지 않습니다.");
+                if (batchToInsert.size() == BATCH_INSERT_SIZE) {
+                    performBatchInsertWithConsistencyCheck(batchToInsert);
+                    totalInserted += batchToInsert.size();
+                    batchToInsert.clear();
+                }
             }
 
-            // 저장된 마지막 row 값을 기록
-            OpenApiFetchStatus newFetchStatus = new OpenApiFetchStatus();
-            newFetchStatus.setLastFetchedRow(endRow);
-            openApiFetchStatusRepository.save(newFetchStatus);
+            // 남은 데이터 처리
+            if (!batchToInsert.isEmpty()) {
+                performBatchInsertWithConsistencyCheck(batchToInsert);
+                totalInserted += batchToInsert.size();
+            }
 
-            if (totalInserted >= MAX_LIMIT) {
+            // 마지막 처리된 row 상태 저장
+            saveLastFetchedStatus(endRow);
+
+            // 총 삽입 데이터가 최대 제한을 초과하면 종료
+            if (totalInserted >= MAX_TOTAL_LIMIT) {
                 break;
             }
 
@@ -100,24 +115,41 @@ public class OpenApiService {
         return totalInserted + "개의 OpenAPI 데이터가 성공적으로 삽입되었습니다.";
     }
 
-    // OpenAPI 데이터를 100개 단위로 db에 insert하는 메서드
-    @Transactional
-    public void batchInsert(List<OpenApi> batchList) {
-        BatchInsertUtil.batchInsert(entityManager, batchList);
-    }
+    private List<OpenApi> parseXmlResponse(String xmlResponse) {
+        if (xmlResponse == null || xmlResponse.trim().isEmpty()) {
+            throw new BadRequestException("XML 응답이 비어있습니다.");
+        }
 
-    // JAXB를 사용하여 XML을 파싱하는 메서드
-    public List<OpenApi> parseXmlWithJAXB(String xmlResponse) {
         try {
-            // JAXBContext를 사용하여 OpenApiResponse 클래스를 unmarshalling합니다.
             JAXBContext context = JAXBContext.newInstance(OpenApiResponse.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            StringReader reader = new StringReader(xmlResponse);
-            OpenApiResponse response = (OpenApiResponse) unmarshaller.unmarshal(reader);
-            return response.getRows(); // OpenApiResponse에서 rows 리스트를 반환합니다.
+
+            OpenApiResponse response = (OpenApiResponse) unmarshaller.unmarshal(new StringReader(xmlResponse));
+
+            if (response == null || response.getRows() == null || response.getRows().isEmpty()) {
+                throw new BadRequestException("파싱된 데이터가 존재하지 않습니다.");
+            }
+
+            return response.getRows();
         } catch (JAXBException e) {
-            log.error("XML 파싱 중 오류 발생", e);
-            return new ArrayList<>();
+            throw new OpenApiException("XML 파싱 중 오류가 발생했습니다: " + e.getMessage());
         }
+    }
+
+    private void performBatchInsertWithConsistencyCheck(List<OpenApi> batchList) {
+        // 데이터베이스에 배치 단위로 insert
+        BatchInsertUtil.batchInsert(entityManager, batchList);
+
+        // 데이터 정합성 체크
+        boolean isConsistent = dataConsistencyUtil.checkOpenApiDataConsistency(batchList);
+        if (!isConsistent) {
+            throw new DataIntegrityException("데이터 정합성 체크 실패! 저장된 데이터와 불러온 데이터가 일치하지 않습니다.");
+        }
+    }
+
+    private void saveLastFetchedStatus(int lastFetchedRow) {
+        OpenApiFetchStatus newFetchStatus = new OpenApiFetchStatus();
+        newFetchStatus.setLastFetchedRow(lastFetchedRow);
+        openApiFetchStatusRepository.save(newFetchStatus);
     }
 }
