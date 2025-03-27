@@ -29,6 +29,10 @@ public class UserService {
 
     @Transactional
     public UserSignupResponseDto signup(UserSignupRequestDto request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new BadRequestException("이미 사용중인 이메일입니다.");
+        }
+
         // 비밀번호 검증
         if (!request.getPassword().equals(request.getPasswordCheck())) {
             throw new BadRequestException("비밀번호를 확인해주세요");
