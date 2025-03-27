@@ -58,4 +58,23 @@ public class ShoppingMallController {
         return ResponseEntity.ok(popularKeywords);
     }
 
+    // v3 API: Redis 캐시를 사용한 검색
+    @GetMapping("/api/v3/boards/search")
+    public ResponseEntity<PageResponse<ShoppingMall>> searchShoppingMallsV3(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        PageResponse<ShoppingMall> result = shoppingMallService.searchShoppingMallsByCategoryV3(keyword, page, size);
+
+        return ResponseEntity.ok(result);
+    }
+
+    // v3 API: Redis 캐시된 인기 검색어 조회
+    @GetMapping("/api/v3/popular")
+    public ResponseEntity<List<String>> getPopularKeywordsWithRedis() {
+        List<String> popularKeywords = shoppingMallService.getPopularKeywordsWithRedis();
+        return ResponseEntity.ok(popularKeywords);
+    }
+
 }
