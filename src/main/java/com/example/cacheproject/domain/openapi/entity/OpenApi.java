@@ -42,20 +42,28 @@ public class OpenApi {
     private String companyAddress;
 
     @XmlElement(name = "TOT_RATINGPOINT")
-    private int overallEvaluation;
+    private int totalEvaluation;
 
     @XmlElement(name = "STAT_NM")
-    private String businessStatus;
+    private String storeStatus;
 
-    public OpenApi(String companyName, String storeName, String domainName, String phoneNumber, String operatorEmail, String companyAddress, int overallEvaluation, String businessStatus) {
+    @XmlElement(name = "SERVICE")
+    private String mainProductCategory; // 주요 제품 카테고리
+
+    @XmlElement(name = "REG_DATE")
+    private String monitoringDate; // 모니터링날짜
+
+    public OpenApi(String companyName, String storeName, String domainName, String phoneNumber, String operatorEmail, String companyAddress, int totalEvaluation, String storeStatus, String mainProductCategory, String monitoringDate) {
         this.companyName = companyName;
         this.storeName = storeName;
         this.domainName = domainName;
         this.phoneNumber = phoneNumber;
         this.operatorEmail = operatorEmail;
         this.companyAddress = companyAddress;
-        this.overallEvaluation = overallEvaluation;
-        this.businessStatus = businessStatus;
+        this.totalEvaluation = totalEvaluation;
+        this.storeStatus = storeStatus;
+        this.mainProductCategory = mainProductCategory;
+        this.monitoringDate = monitoringDate;
     }
 
     @Override
@@ -68,8 +76,10 @@ public class OpenApi {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", operatorEmail='" + operatorEmail + '\'' +
                 ", companyAddress='" + companyAddress + '\'' +
-                ", overallEvaluation=" + overallEvaluation +
-                ", status='" + businessStatus + '\'' +
+                ", overallEvaluation=" + totalEvaluation +
+                ", status='" + storeStatus + '\'' +
+                ", mainProductCategory='" + mainProductCategory + '\'' +
+                ", monitoringDate='" + monitoringDate + '\'' +
                 '}';
     }
 
@@ -78,18 +88,20 @@ public class OpenApi {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OpenApi openApi = (OpenApi) o;
-        return overallEvaluation == openApi.overallEvaluation &&
+        return totalEvaluation == openApi.totalEvaluation &&
                 Objects.equals(companyName, openApi.companyName) &&
                 Objects.equals(storeName, openApi.storeName) &&
                 Objects.equals(domainName, openApi.domainName) &&
                 Objects.equals(phoneNumber, openApi.phoneNumber) &&
                 Objects.equals(operatorEmail, openApi.operatorEmail) &&
                 Objects.equals(companyAddress, openApi.companyAddress) &&
-                Objects.equals(businessStatus, openApi.businessStatus);
+                Objects.equals(storeStatus, openApi.storeStatus) &&
+                Objects.equals(mainProductCategory, openApi.mainProductCategory) &&
+                Objects.equals(monitoringDate, openApi.monitoringDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(companyName, storeName, domainName, phoneNumber, operatorEmail, companyAddress, overallEvaluation, businessStatus);
+        return Objects.hash(companyName, storeName, domainName, phoneNumber, operatorEmail, companyAddress, totalEvaluation, storeStatus);
     }
 }

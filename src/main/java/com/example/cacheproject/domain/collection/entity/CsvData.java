@@ -27,18 +27,22 @@ public class CsvData {
     private String phoneNumber;                   // 전화번호
     private String operatorEmail;                 // 운영자이메일
     private String companyAddress;                // 회사 주소
-    private int overallEvaluation;                // 전체평가
-    private String businessStatus;                // 영업형태
+    private int totalEvaluation;;                // 전체평가
+    private String storeStatus;;                // 영업형태
+    private String mainProductCategory;
+    private String monitoringDate;
 
-    public CsvData(String companyName, String storeName, String domainName, String phoneNumber, String operatorEmail, String companyAddress, int overallEvaluation, String businessStatus) {
+    public CsvData(String companyName, String storeName, String domainName, String phoneNumber, String operatorEmail, String companyAddress, int totalEvaluation, String storeStatus, String mainProductCategory, String monitoringDate) {
         this.companyName = companyName;
         this.storeName = storeName;
         this.domainName = domainName;
         this.phoneNumber = phoneNumber;
         this.operatorEmail = operatorEmail;
         this.companyAddress = companyAddress;
-        this.overallEvaluation = overallEvaluation;
-        this.businessStatus = businessStatus;
+        this.totalEvaluation = totalEvaluation;
+        this.storeStatus = storeStatus;
+        this.mainProductCategory = mainProductCategory;
+        this.monitoringDate = monitoringDate;
     }
 
     @Override
@@ -51,8 +55,10 @@ public class CsvData {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", operatorEmail='" + operatorEmail + '\'' +
                 ", companyAddress='" + companyAddress + '\'' +
-                ", overallEvaluation=" + overallEvaluation +
-                ", status='" + businessStatus + '\'' +
+                ", totalEvaluation=" + totalEvaluation +
+                ", storeStatus='" + storeStatus + '\'' +
+                ", mainProductCategory='" + mainProductCategory + '\'' +
+                ", monitoringDate='" + monitoringDate + '\'' +
                 '}';
     }
 
@@ -61,18 +67,20 @@ public class CsvData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CsvData csvData = (CsvData) o;
-        return overallEvaluation == csvData.overallEvaluation &&
+        return totalEvaluation == csvData.totalEvaluation &&
                 Objects.equals(companyName, csvData.companyName) &&
                 Objects.equals(storeName, csvData.storeName) &&
                 Objects.equals(domainName, csvData.domainName) &&
                 Objects.equals(phoneNumber, csvData.phoneNumber) &&
                 Objects.equals(operatorEmail, csvData.operatorEmail) &&
                 Objects.equals(companyAddress, csvData.companyAddress) &&
-                Objects.equals(businessStatus, csvData.businessStatus);
+                Objects.equals(storeStatus, csvData.storeStatus) &&
+                Objects.equals(mainProductCategory, csvData.mainProductCategory) &&
+                Objects.equals(monitoringDate, csvData.monitoringDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(companyName, storeName, domainName, phoneNumber, operatorEmail, companyAddress, overallEvaluation, businessStatus);
+        return Objects.hash(companyName, storeName, domainName, phoneNumber, operatorEmail, companyAddress, totalEvaluation, storeStatus, mainProductCategory, monitoringDate);
     }
 }
