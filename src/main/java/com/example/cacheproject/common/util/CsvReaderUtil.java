@@ -1,6 +1,6 @@
 package com.example.cacheproject.common.util;
 
-import com.example.cacheproject.collection.entity.CsvData;
+import com.example.cacheproject.domain.collection.entity.CsvData;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import lombok.RequiredArgsConstructor;

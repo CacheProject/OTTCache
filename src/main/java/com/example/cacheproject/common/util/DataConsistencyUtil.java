@@ -1,9 +1,9 @@
 package com.example.cacheproject.common.util;
 
-import com.example.cacheproject.collection.entity.CsvData;
-import com.example.cacheproject.collection.repository.CsvDataRepository;
-import com.example.cacheproject.openapi.entity.OpenApi;
-import com.example.cacheproject.openapi.repository.OpenApiRepository;
+import com.example.cacheproject.domain.collection.entity.CsvData;
+import com.example.cacheproject.domain.collection.repository.CsvDataRepository;
+import com.example.cacheproject.domain.openapi.entity.OpenApi;
+import com.example.cacheproject.domain.openapi.repository.OpenApiRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

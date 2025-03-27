@@ -1,13 +1,13 @@
 package com.example.cacheproject.domain.user.service;
 
-import com.example.cacheproject.store.repository.StoreRepository;
+import com.example.cacheproject.domain.store.repository.StoreRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.cacheproject.domain.user.dto.request.UserSignupRequestDto;
 import com.example.cacheproject.domain.user.dto.response.UserSignupResponseDto;
 import com.example.cacheproject.domain.user.entity.User;
 import com.example.cacheproject.domain.user.repository.UserRepository;
-import com.example.cacheproject.exception.BadRequestException;
-import com.example.cacheproject.exception.UnauthorizedException;
+import com.example.cacheproject.common.exception.BadRequestException;
+import com.example.cacheproject.common.exception.UnauthorizedException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

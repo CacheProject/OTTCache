@@ -1,6 +1,6 @@
 package com.example.cacheproject.domain.auth.service;
 
-import com.example.cacheproject.exception.UnauthorizedException;
+import com.example.cacheproject.common.exception.UnauthorizedException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

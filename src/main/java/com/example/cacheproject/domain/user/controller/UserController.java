@@ -1,6 +1,6 @@
 package com.example.cacheproject.domain.user.controller;
 
-import com.example.cacheproject.response.Response;
+import com.example.cacheproject.common.response.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import com.example.cacheproject.domain.user.dto.request.UserDeleteRequestDto;

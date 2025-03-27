@@ -1,6 +1,6 @@
 package com.example.cacheproject.domain.user.enums;
 
-import com.example.cacheproject.exception.BadRequestException;
+import com.example.cacheproject.common.exception.BadRequestException;
 
 import java.util.Arrays;
 

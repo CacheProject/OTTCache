@@ -1,7 +1,7 @@
 package com.example.cacheproject.domain.user.dto.response;
 
-import com.example.cacheproject.store.dto.StoreSummaryDto;
-import com.example.cacheproject.store.entity.Store;
+import com.example.cacheproject.domain.store.dto.StoreSummaryDto;
+import com.example.cacheproject.domain.store.entity.Store;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import com.example.cacheproject.domain.user.entity.User;
