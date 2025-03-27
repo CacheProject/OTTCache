@@ -29,7 +29,10 @@ public class SecurityConfig {
                                 "/users/signup",
                                 "/collection-batch",
                                 "/collection-openapi",
-                                "/stores/**").permitAll()
+                                "/stores/**",
+                                "/api/v1/boards/search",
+                                "/api/v2/boards/search",
+                                "/popular").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

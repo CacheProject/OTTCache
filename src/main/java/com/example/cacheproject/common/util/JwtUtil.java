@@ -1,7 +1,7 @@
 package com.example.cacheproject.common.util;
 
 import com.example.cacheproject.domain.user.enums.UserRole;
-import com.example.cacheproject.exception.UnauthorizedException;
+import com.example.cacheproject.common.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @Slf4j(topic = "JwtUtil")

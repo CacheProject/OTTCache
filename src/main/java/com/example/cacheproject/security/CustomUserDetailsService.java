@@ -2,7 +2,7 @@ package com.example.cacheproject.security;
 
 import com.example.cacheproject.domain.user.entity.User;
 import com.example.cacheproject.domain.user.repository.UserRepository;
-import com.example.cacheproject.exception.UnauthorizedException;
+import com.example.cacheproject.common.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

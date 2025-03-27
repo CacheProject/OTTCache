@@ -1,6 +1,6 @@
 package com.example.cacheproject.domain.auth.controller;
 
-import com.example.cacheproject.response.Response;
+import com.example.cacheproject.common.response.Response;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

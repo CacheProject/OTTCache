@@ -1,9 +1,9 @@
 package com.example.cacheproject.domain.user.service;
 
-import com.example.cacheproject.exception.BadRequestException;
-import com.example.cacheproject.exception.NotFoundException;
-import com.example.cacheproject.exception.UnauthorizedException;
-import com.example.cacheproject.store.repository.StoreRepository;
+import com.example.cacheproject.common.exception.BadRequestException;
+import com.example.cacheproject.common.exception.NotFoundException;
+import com.example.cacheproject.common.exception.UnauthorizedException;
+import com.example.cacheproject.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.cacheproject.domain.user.dto.request.UserSignupRequestDto;
@@ -11,7 +11,7 @@ import com.example.cacheproject.domain.user.dto.response.UserListResponseDto;
 import com.example.cacheproject.domain.user.dto.response.UserProfileResponseDto;
 import com.example.cacheproject.domain.user.dto.response.UserSignupResponseDto;
 import com.example.cacheproject.domain.user.entity.User;
-import com.example.cacheproject.store.entity.Store;
+import com.example.cacheproject.domain.store.entity.Store;
 import com.example.cacheproject.domain.user.repository.UserRepository;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

@@ -5,7 +5,7 @@ import com.example.cacheproject.domain.auth.dto.request.LoginRequestDto;
 import com.example.cacheproject.domain.auth.dto.response.LoginResponseDto;
 import com.example.cacheproject.domain.user.entity.User;
 import com.example.cacheproject.domain.user.repository.UserRepository;
-import com.example.cacheproject.exception.UnauthorizedException;
+import com.example.cacheproject.common.exception.UnauthorizedException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
