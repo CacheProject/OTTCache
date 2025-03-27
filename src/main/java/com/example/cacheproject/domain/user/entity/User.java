@@ -37,7 +37,7 @@ public class User {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    public User(String username, String email, String password, String role) {
+    public User(String email, String username, String password, String role) {
         this.username = username;
         this.email = email;
         this.password = password;
