@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -28,6 +30,13 @@ public class ShoppingMallController {
         PageResponse<ShoppingMall> result = shoppingMallService.searchShoppingMallsByCategoryV1(keyword, page, size);
 
         return ResponseEntity.ok(result);
+    }
+
+    // v1 API: 인기 검색어 조회 API (DB 조회)
+    @GetMapping("/popular")
+    public ResponseEntity<List<String>> getPopularKeywords() {
+        List<String> popularKeywords = shoppingMallService.getPopularKeywords();
+        return ResponseEntity.ok(popularKeywords);
     }
 
     // v2 API: 캐시 적용
