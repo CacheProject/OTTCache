@@ -8,7 +8,7 @@ public interface Response<T> {
 
     T getData();
 
-    static <T> Response<List<T>> of(List<T> data) {
+    static <T> Response<T> of(T data) {
         return new DefaultResponse<>(data);
     }
 
