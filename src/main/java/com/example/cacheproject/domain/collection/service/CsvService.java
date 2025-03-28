@@ -1,5 +1,6 @@
 package com.example.cacheproject.domain.collection.service;
 
+import com.example.cacheproject.domain.collection.dto.GetCsvDataResponseDto;
 import com.example.cacheproject.domain.collection.entity.CsvData;
 import com.example.cacheproject.domain.collection.fetchstatus.entity.CsvDataFetchStatus;
 import com.example.cacheproject.domain.collection.fetchstatus.repository.CsvDataFetchStatusRepository;
@@ -7,6 +8,9 @@ import com.example.cacheproject.common.util.BatchInsertUtil;
 import com.example.cacheproject.common.util.CsvReaderUtil;
 import com.example.cacheproject.common.util.DataConsistencyUtil;
 import com.example.cacheproject.common.exception.DataIntegrityException;
+import com.example.cacheproject.domain.collection.repository.CsvDataRepository;
+import com.example.cacheproject.domain.store.ScrollPaginationCollection;
+import com.example.cacheproject.domain.store.dto.response.GetStoreResponseDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CsvService {
 
+    private final CsvDataRepository csvDataRepository;
     @Value("${file.path}")
     private String filePath; // CSV 파일 경로를 설정값에서 가져옴
 
@@ -82,5 +87,13 @@ public class CsvService {
     @Transactional
     public void batchInsert(List<CsvData> entities) {
         BatchInsertUtil.batchInsert(entityManager, entities);
+    }
+
+    @Transactional(readOnly = true)
+    public GetCsvDataResponseDto getCsvDateByCursor(Integer score, String status, Long lastPageId, int size) {
+        List<CsvData> csvDataList = csvDataRepository.findAllCsvDataByCursor(score, status, lastPageId, size);
+
+        ScrollPaginationCollection<CsvData> csvDataCursor = ScrollPaginationCollection.of(csvDataList, size);
+        return GetCsvDataResponseDto.of(csvDataCursor, csvDataList.size());
     }
 }

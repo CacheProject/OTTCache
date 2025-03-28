@@ -39,7 +39,7 @@ public class StoreController {
     }
 
     // 커서 기반 페이지네이션
-    @GetMapping("/stores/paging")
+    @GetMapping("/stores/cursor-paging")
     public ResponseEntity<GetStoreResponseDto> getStoresByCursor(
             @RequestParam(required = false) Integer score,
             @RequestParam(required = false) String status,

@@ -27,8 +27,8 @@ public class CsvData {
     private String phoneNumber;                   // 전화번호
     private String operatorEmail;                 // 운영자이메일
     private String companyAddress;                // 회사 주소
-    private int totalEvaluation;;                // 전체평가
-    private String storeStatus;;                // 영업형태
+    private int totalEvaluation;                 // 전체평가
+    private String storeStatus;                // 영업형태
     private String mainProductCategory;
     private String monitoringDate;
 

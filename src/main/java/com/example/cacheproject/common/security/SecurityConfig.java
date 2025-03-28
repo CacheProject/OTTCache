@@ -29,6 +29,7 @@ public class SecurityConfig {
                                 "/users/signup",
                                 "/collection-batch",
                                 "/collection-openapi",
+                                "/collection/paging",
                                 "/stores/**",
                                 "/api/v1/boards/search",
                                 "/api/v2/boards/search",
