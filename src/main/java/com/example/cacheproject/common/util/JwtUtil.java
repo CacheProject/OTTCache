@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @Slf4j(topic = "JwtUtil")
