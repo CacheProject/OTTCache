@@ -1,4 +1,4 @@
-package com.example.cacheproject.config;
+package com.example.cacheproject.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

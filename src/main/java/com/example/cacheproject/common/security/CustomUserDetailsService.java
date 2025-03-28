@@ -1,4 +1,4 @@
-package com.example.cacheproject.security;
+package com.example.cacheproject.common.security;
 
 import com.example.cacheproject.domain.user.entity.User;
 import com.example.cacheproject.domain.user.repository.UserRepository;

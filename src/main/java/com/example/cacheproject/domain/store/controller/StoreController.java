@@ -1,5 +1,6 @@
 package com.example.cacheproject.domain.store.controller;
 
+import com.example.cacheproject.domain.store.dto.response.GetStoreResponseDto;
 import lombok.RequiredArgsConstructor;
 import com.example.cacheproject.domain.store.dto.response.StoreResponsDto;
 import com.example.cacheproject.domain.store.service.StoreService;
@@ -35,5 +36,16 @@ public class StoreController {
             @RequestParam String status
     ) {
         return ResponseEntity.ok(storeService.findAllStores(page, size, score, status));
+    }
+
+    // 커서 기반 페이지네이션
+    @GetMapping("/stores/cursor-paging")
+    public ResponseEntity<GetStoreResponseDto> getStoresByCursor(
+            @RequestParam(required = false) Integer score,
+            @RequestParam(required = false) String status,
+            @RequestParam Long lastPageId,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(storeService.getStoresByCursor(score,status,lastPageId,size));
     }
 }

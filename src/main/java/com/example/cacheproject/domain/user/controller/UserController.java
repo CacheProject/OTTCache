@@ -7,12 +7,11 @@ import com.example.cacheproject.domain.user.dto.request.UserDeleteRequestDto;
 import com.example.cacheproject.domain.user.dto.request.UserSignupRequestDto;
 import com.example.cacheproject.domain.user.dto.request.UserUpdateRequestDto;
 import com.example.cacheproject.domain.user.dto.response.UserListResponseDto;
-import com.example.cacheproject.domain.user.dto.response.UserProfileResponseDto;
 import com.example.cacheproject.domain.user.dto.response.UserSignupResponseDto;
 import com.example.cacheproject.domain.user.dto.response.UserUpdateResponseDto;
 import com.example.cacheproject.domain.user.entity.User;
 import com.example.cacheproject.domain.user.service.UserService;
-import com.example.cacheproject.security.CustomUserDetails;
+import com.example.cacheproject.common.security.CustomUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,11 +37,11 @@ public class UserController {
         return ResponseEntity.ok(Response.of(userService.getAllUsers()));
     }
 
-    @GetMapping("/profile")
-    public ResponseEntity<Response<UserProfileResponseDto>> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        User user = userDetails.getUser();
-        return ResponseEntity.ok(Response.of(userService.getMyProfile(user)));
-    }
+//    @GetMapping("/profile")
+//    public ResponseEntity<Response<UserProfileResponseDto>> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
+//        User user = userDetails.getUser();
+//        return ResponseEntity.ok(Response.of(userService.getMyProfile(user)));
+//    }
 
     @PatchMapping
     public ResponseEntity<Response<UserUpdateResponseDto>> updateUsername(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid UserUpdateRequestDto request) {

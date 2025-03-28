@@ -1,5 +1,8 @@
 package com.example.cacheproject.domain.store.service;
 
+import com.example.cacheproject.domain.store.ScrollPaginationCollection;
+import com.example.cacheproject.domain.store.dto.response.GetStoreResponseDto;
+import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import com.example.cacheproject.domain.store.dto.response.StoreResponsDto;
 import com.example.cacheproject.domain.store.entity.Store;
@@ -28,13 +31,13 @@ public class StoreService {
 
         // 전체평가 필터만 사용
         if (score != null && (status == null || status.trim().isEmpty())) {
-            storeList = storeRepository.findTop10ByTotal_evalutionOrderByMonitoring_dateDesc(score);
+            storeList = storeRepository.findTop10ByTotal_evaluationOrderByMonitoring_dateDesc(score);
         } // 업소상태 필터만 사용
         else if (status != null && score == null) {
             storeList = storeRepository.findTop10ByOpen_statusOrderByMonitoring_dateDesc(status);
         }  // 전체평가 필터와 업소상태 필터 둘다 사용
         else {
-            storeList = storeRepository.findTop10ByTotal_evalutionAndOpen_statusOrderByMonitoring_dateDesc(score, status);
+            storeList = storeRepository.findTop10ByTotal_evaluationAndOpen_statusOrderByMonitoring_dateDesc(score, status);
         }
 
         List<StoreResponsDto> dtoList = new ArrayList<>();
@@ -42,10 +45,10 @@ public class StoreService {
         for (Store store : storeList) {
             StoreResponsDto dto = new StoreResponsDto(
                     store.getId(),
-                    store.getStore_name(),
-                    store.getTotal_evalution(),
-                    store.getOpen_status(),
-                    store.getMonitoring_date()
+                    store.getStoreName(),
+                    store.getTotalEvaluation(),
+                    store.getStoreStatus(),
+                    store.getMonitoringDate()
             );
             dtoList.add(dto);
         }
@@ -59,12 +62,21 @@ public class StoreService {
         int adjustPage = (page > 0) ? page - 1 : 0;
         Pageable pageable = PageRequest.of(adjustPage, size);
 
-        Page<Store> storePage = storeRepository.findAllStoresTotal_evalutionAndOpen_status(pageable, score, status);
+        Page<Store> storePage = storeRepository.findAllStoresTotal_evaluationAndOpen_status(pageable, score, status);
 
         List<StoreResponsDto> dtoList = storePage.getContent().stream()
                 .map(StoreResponsDto::toDto)
                 .toList();
 
         return new PageImpl<>(dtoList, pageable, storePage.getTotalElements());
+    }
+
+    // 커서 기반 페이지네이션 (필터 개별 및 동시 가능)
+    @Transactional(readOnly = true)
+    public GetStoreResponseDto getStoresByCursor(Integer score, String status, Long lastPageId, int size) {
+       List<Store> storeList = storeRepository.findAllStoresByCursorTotal_evaluationAndOpen_status(score,status,lastPageId,size);
+
+        ScrollPaginationCollection<Store> storeCursor = ScrollPaginationCollection.of(storeList, size);
+        return GetStoreResponseDto.of(storeCursor, storeList.size());
     }
 }
