@@ -33,9 +33,48 @@ public class ShoppingMallController {
     }
 
     // v1 API: 인기 검색어 조회 API (DB 조회)
-    @GetMapping("/popular")
+    @GetMapping("/api/v1/popular")
     public ResponseEntity<List<String>> getPopularKeywords() {
         List<String> popularKeywords = shoppingMallService.getPopularKeywords();
         return ResponseEntity.ok(popularKeywords);
     }
+
+    // v2 API: 캐시 적용
+    @GetMapping("/api/v2/boards/search")
+    public ResponseEntity searchShoppingMallsV2(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        PageResponse result = shoppingMallService.searchShoppingMallsByCategoryV2(keyword, page, size);
+
+        return ResponseEntity.ok(result);
+    }
+
+    // v2 API: 캐시 적용된 인기 검색어 조회
+    @GetMapping("/api/v2/popular")
+    public ResponseEntity<List<String>> getPopularKeywordsV2() {
+        List<String> popularKeywords = shoppingMallService.getPopularKeywordsV2();
+        return ResponseEntity.ok(popularKeywords);
+    }
+
+    // v3 API: Redis 캐시를 사용한 검색
+    @GetMapping("/api/v3/boards/search")
+    public ResponseEntity<PageResponse<ShoppingMall>> searchShoppingMallsV3(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        PageResponse<ShoppingMall> result = shoppingMallService.searchShoppingMallsByCategoryV3(keyword, page, size);
+
+        return ResponseEntity.ok(result);
+    }
+
+    // v3 API: Redis 캐시된 인기 검색어 조회
+    @GetMapping("/api/v3/popular")
+    public ResponseEntity<List<String>> getPopularKeywordsWithRedis() {
+        List<String> popularKeywords = shoppingMallService.getPopularKeywordsWithRedis();
+        return ResponseEntity.ok(popularKeywords);
+    }
+
 }

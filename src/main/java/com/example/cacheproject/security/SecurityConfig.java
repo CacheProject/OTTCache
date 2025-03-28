@@ -32,7 +32,10 @@ public class SecurityConfig {
                                 "/stores/**",
                                 "/api/v1/boards/search",
                                 "/api/v2/boards/search",
-                                "/popular").permitAll()
+                                "/api/v3/boards/search",
+                                "/api/v1/popular",
+                                "/api/v2/popular",
+                                "/api/v3/popular" ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
