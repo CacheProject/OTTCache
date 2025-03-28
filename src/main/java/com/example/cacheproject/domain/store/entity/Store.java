@@ -15,28 +15,27 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String mutaul;
+    private String companyName;
 
-    private String store_name;
+    private String storeName;
 
-    private String domain_name;
+    private String domainName;
+    private String phoneNumber;
+    private String operatorEmail;
+    private String companyAddress;
 
-    private String email;
+    private String storeStatus;
 
-    private String store_status;
-
-    private String open_status;
-
-    private String total_evaluation;
-
-    private String monitoring_date;
+    private String totalEvaluation;
+    private String mainProductCategory;
+    private String monitoringDate;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
     public Store(StoreRequestDto dto, Long userId) {
-        this.store_name = dto.getStoreName();
-        this.email = dto.getEmail();
+        this.storeName = dto.getStoreName();
+        this.operatorEmail = dto.getEmail();
         this.userId = userId;
     }
 }

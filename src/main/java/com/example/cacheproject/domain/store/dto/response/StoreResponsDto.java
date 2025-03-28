@@ -8,29 +8,29 @@ public class StoreResponsDto {
 
     private final Long id;
 
-    private final String store_name;
+    private final String storeName;
 
-    private final String total_evaluation;
+    private final String totalEvaluation;
 
-    private final String open_status;
+    private final String storeStatus;
 
-    private final String monitoring_date;
+    private final String monitoringDate;
 
-    public StoreResponsDto(Long id, String store_name, String total_evaluation, String open_status, String monitoring_date) {
+    public StoreResponsDto(Long id, String storeName, String totalEvaluation, String storeStatus, String monitoringDate) {
         this.id = id;
-        this.store_name = store_name;
-        this.total_evaluation = total_evaluation;
-        this.open_status = open_status;
-        this.monitoring_date = monitoring_date;
+        this.storeName = storeName;
+        this.totalEvaluation = totalEvaluation;
+        this.storeStatus = storeStatus;
+        this.monitoringDate = monitoringDate;
     }
 
     public static StoreResponsDto toDto(Store store) {
         return new StoreResponsDto(
                 store.getId(),
-                store.getStore_name(),
-                store.getTotal_evaluation(),
-                store.getOpen_status(),
-                store.getMonitoring_date()
+                store.getStoreName(),
+                store.getTotalEvaluation(),
+                store.getStoreStatus(),
+                store.getMonitoringDate()
         );
     }
 }

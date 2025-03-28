@@ -45,10 +45,10 @@ public class StoreService {
         for (Store store : storeList) {
             StoreResponsDto dto = new StoreResponsDto(
                     store.getId(),
-                    store.getStore_name(),
-                    store.getTotal_evaluation(),
-                    store.getOpen_status(),
-                    store.getMonitoring_date()
+                    store.getStoreName(),
+                    store.getTotalEvaluation(),
+                    store.getStoreStatus(),
+                    store.getMonitoringDate()
             );
             dtoList.add(dto);
         }

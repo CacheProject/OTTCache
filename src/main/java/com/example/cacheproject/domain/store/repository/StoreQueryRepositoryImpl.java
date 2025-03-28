@@ -25,8 +25,8 @@ public class StoreQueryRepositoryImpl implements StoreQueryRepository {
     public List<Store> findTop10ByTotal_evaluationOrderByMonitoring_dateDesc (Integer score) {
         return queryFactory
                 .selectFrom(store)
-                .where(store.total_evaluation.eq(String.valueOf(score)))
-                .orderBy(store.monitoring_date.desc())
+                .where(store.totalEvaluation.eq(String.valueOf(score)))
+                .orderBy(store.monitoringDate.desc())
                 .limit(10)
                 .fetch();
     }
@@ -36,8 +36,8 @@ public class StoreQueryRepositoryImpl implements StoreQueryRepository {
     public List<Store> findTop10ByOpen_statusOrderByMonitoring_dateDesc (String status) {
         return queryFactory
                 .selectFrom(store)
-                .where(store.open_status.eq(status))
-                .orderBy(store.monitoring_date.desc())
+                .where(store.storeStatus.eq(status))
+                .orderBy(store.monitoringDate.desc())
                 .limit(10)
                 .fetch();
     }
@@ -47,9 +47,9 @@ public class StoreQueryRepositoryImpl implements StoreQueryRepository {
     public List<Store> findTop10ByTotal_evaluationAndOpen_statusOrderByMonitoring_dateDesc (Integer score, String status) {
         return queryFactory
                 .selectFrom(store)
-                .where(store.total_evaluation.eq(String.valueOf(score)),
-                        store.open_status.eq(status))
-                .orderBy(store.monitoring_date.desc())
+                .where(store.totalEvaluation.eq(String.valueOf(score)),
+                        store.storeStatus.eq(status))
+                .orderBy(store.monitoringDate.desc())
                 .limit(10)
                 .fetch();
     }
@@ -60,16 +60,16 @@ public class StoreQueryRepositoryImpl implements StoreQueryRepository {
 //        pageable = pageable == null ? PageRequest.of(0, 10) : pageable;
         List<Store> storeList =  queryFactory
                 .selectFrom(store)
-                .where(store.total_evaluation.eq(String.valueOf(score)),
-                        store.open_status.eq(status))
+                .where(store.totalEvaluation.eq(String.valueOf(score)),
+                        store.storeStatus.eq(status))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         long count = queryFactory
                 .selectFrom(store)
-                .where(store.total_evaluation.eq(String.valueOf(score)),
-                        store.open_status.eq(status))
+                .where(store.totalEvaluation.eq(String.valueOf(score)),
+                        store.storeStatus.eq(status))
                 .fetchCount();
         return new PageImpl<>(storeList, pageable, count);
     }
@@ -80,10 +80,10 @@ public class StoreQueryRepositoryImpl implements StoreQueryRepository {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (score != null) {
-            builder.and(store.total_evaluation.eq(String.valueOf(score)));
+            builder.and(store.totalEvaluation.eq(String.valueOf(score)));
         }
         if (status != null) {
-            builder.and(store.open_status.eq(status));
+            builder.and(store.storeStatus.eq(status));
         }
         if (lastPageId != null) {
             builder.and(store.id.lt(lastPageId));

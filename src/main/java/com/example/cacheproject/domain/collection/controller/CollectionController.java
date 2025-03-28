@@ -1,10 +1,12 @@
 package com.example.cacheproject.domain.collection.controller;
 
+import com.example.cacheproject.domain.collection.dto.GetCsvDataResponseDto;
 import com.example.cacheproject.domain.collection.service.CsvService;
 import com.example.cacheproject.domain.openapi.service.OpenApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,4 +30,13 @@ public class CollectionController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/collection/paging")
+    public ResponseEntity<GetCsvDataResponseDto> getCsvDateByCursor(
+            @RequestParam(required = false) Integer score,
+            @RequestParam(required = false) String status,
+            @RequestParam Long lastPageId,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(csvService.getCsvDateByCursor(score, status, lastPageId, size));
+    }
 }

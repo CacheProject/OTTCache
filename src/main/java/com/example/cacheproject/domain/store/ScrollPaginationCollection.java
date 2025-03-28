@@ -27,7 +27,7 @@ public class ScrollPaginationCollection<T> {
     }
 
     public T getNextCursor() {
-        if (isLastScroll()) {
+        if (itemsWithNextCursor.isEmpty()) {
             return null;
         }
         return itemsWithNextCursor.get(itemsWithNextCursor.size() - 1);
