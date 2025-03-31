@@ -89,6 +89,7 @@ public class CsvService {
         BatchInsertUtil.batchInsert(entityManager, entities);
     }
 
+    // CSV insert 조회 메서드
     @Transactional(readOnly = true)
     public GetCsvDataResponseDto getCsvDateByCursor(Integer score, String status, Long lastPageId, int size) {
         List<CsvData> csvDataList = csvDataRepository.findAllCsvDataByCursor(score, status, lastPageId, size);

@@ -2,6 +2,7 @@ package com.example.cacheproject.domain.collection.controller;
 
 import com.example.cacheproject.domain.collection.dto.GetCsvDataResponseDto;
 import com.example.cacheproject.domain.collection.service.CsvService;
+import com.example.cacheproject.domain.openapi.dto.GetOpenApiResponseDto;
 import com.example.cacheproject.domain.openapi.service.OpenApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,8 @@ public class CollectionController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/collection/paging")
+    // csv insert 조회 (cursor 기반)
+    @GetMapping("/collection-batch/paging")
     public ResponseEntity<GetCsvDataResponseDto> getCsvDateByCursor(
             @RequestParam(required = false) Integer score,
             @RequestParam(required = false) String status,
@@ -38,5 +40,16 @@ public class CollectionController {
             @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(csvService.getCsvDateByCursor(score, status, lastPageId, size));
+    }
+
+    // opneApi insert 조회 (cursor 기반)
+    @GetMapping("/collection-openapi/paging")
+    public ResponseEntity<GetOpenApiResponseDto> getOpenApiByCursor(
+            @RequestParam(required = false) Integer score,
+            @RequestParam(required = false) String status,
+            @RequestParam Long lastPageId,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(openApiService.getOpenApiByCursor(score, status, lastPageId, size));
     }
 }

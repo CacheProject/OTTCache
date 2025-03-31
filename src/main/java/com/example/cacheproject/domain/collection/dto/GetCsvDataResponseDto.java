@@ -30,13 +30,6 @@ public class GetCsvDataResponseDto {
         CsvData nextCursorData = csvDataScroll.getNextCursor();
         long nextCursor = (nextCursorData != null) ? nextCursorData.getId() : LAST_CURSOR;
         return new GetCsvDataResponseDto(getContents(csvDataScroll.getCurrentScrollItems()), totalElements, nextCursor);
-//        if (csvDataScroll.isLastScroll()) {
-//            return GetCsvDataResponseDto.newLastScroll(csvDataScroll.getCurrentScrollItems(),
-//                    totalElements);
-//        }
-//        return GetCsvDataResponseDto.newScrollHasNext(csvDataScroll.getCurrentScrollItems(),
-//                totalElements,
-//                csvDataScroll.getNextCursor().getId());
     }
 
     public static GetCsvDataResponseDto newLastScroll(List<CsvData> csvDataScroll, long totalElements) {
