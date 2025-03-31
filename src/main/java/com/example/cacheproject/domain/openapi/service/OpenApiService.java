@@ -5,10 +5,13 @@ import com.example.cacheproject.common.util.DataConsistencyUtil;
 import com.example.cacheproject.common.exception.BadRequestException;
 import com.example.cacheproject.common.exception.DataIntegrityException;
 import com.example.cacheproject.common.exception.OpenApiException;
+import com.example.cacheproject.domain.openapi.dto.GetOpenApiResponseDto;
 import com.example.cacheproject.domain.openapi.dto.OpenApiResponse;
 import com.example.cacheproject.domain.openapi.entity.OpenApi;
 import com.example.cacheproject.domain.openapi.fetchstatus.entity.OpenApiFetchStatus;
 import com.example.cacheproject.domain.openapi.fetchstatus.repository.OpenApiFetchStatusRepository;
+import com.example.cacheproject.domain.openapi.repository.OpenApiRepository;
+import com.example.cacheproject.domain.store.ScrollPaginationCollection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.xml.bind.JAXBContext;
@@ -38,6 +41,7 @@ public class OpenApiService {
     private final RestTemplate restTemplate;
     private final OpenApiFetchStatusRepository openApiFetchStatusRepository;
     private final DataConsistencyUtil dataConsistencyUtil;
+    private final OpenApiRepository openApiRepository;
 
     @Value("${openapi.url}")
     private String openApiUrl;
@@ -151,5 +155,14 @@ public class OpenApiService {
         OpenApiFetchStatus newFetchStatus = new OpenApiFetchStatus();
         newFetchStatus.setLastFetchedRow(lastFetchedRow);
         openApiFetchStatusRepository.save(newFetchStatus);
+    }
+
+    // openApi insert 조회 메서드
+    @Transactional(readOnly = true)
+    public GetOpenApiResponseDto getOpenApiByCursor(Integer score, String status, Long lastPageId, int size) {
+        List<OpenApi> openApiList = openApiRepository.findAllOpenApiByCursor(score, status, lastPageId, size);
+
+        ScrollPaginationCollection<OpenApi> openApiCursor = ScrollPaginationCollection.of(openApiList, size);
+        return GetOpenApiResponseDto.of(openApiCursor, openApiList.size());
     }
 }
